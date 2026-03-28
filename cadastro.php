@@ -2,53 +2,57 @@
 session_start();
 require_once("conexao.php");
 
-if ($_SERVER['REQUEST_METHOD'] == "POST") {  
-    $nome = trim($_POST['nome']);
-    $email_raw = trim($_POST['email']);
-    $senha = trim($_POST['senha']);
+// Gera token CSRF
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 
-    if(empty($nome) || empty($email_raw) || empty($senha)){
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+
+    // Validação CSRF
+    if (empty($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("Requisição inválida.");
+    }
+
+    $nome      = trim($_POST['nome'] ?? '');
+    $email_raw = trim($_POST['email'] ?? '');
+    $senha     = trim($_POST['senha'] ?? '');
+
+    if (empty($nome) || empty($email_raw) || empty($senha)) {
         $erro = "Preencha todos os campos!";
-    } 
-
-    elseif(strlen($nome) < 3){
+    } elseif (strlen($nome) < 3) {
         $erro = "O nome deve ter no mínimo 3 caracteres!";
-    }
-    
-    elseif(!filter_var($email_raw, FILTER_VALIDATE_EMAIL)){
+    } elseif (strlen($nome) > 100) {
+        $erro = "O nome deve ter no máximo 100 caracteres!"; // <-- CORRIGIDO: limite máximo
+    } elseif (!filter_var($email_raw, FILTER_VALIDATE_EMAIL)) {
         $erro = "E-mail inválido!";
-    }
-
-    elseif(strlen($senha) < 8){
+    } elseif (strlen($senha) < 8) {
         $erro = "A senha deve ter no mínimo 8 caracteres!";
-    }    
-
-    else{
+    } else {
         $email = filter_var($email_raw, FILTER_VALIDATE_EMAIL);
-        
-        $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE EMAIL = ?");
-        $stmt->execute([$email]);
-        $user = $stmt->fetch();
 
-        if ($user == 1) {
+        // Verifica se email já existe
+        $stmt = $pdo->prepare("SELECT id FROM usuarios WHERE email = ?");
+        $stmt->execute([$email]);
+
+        if ($stmt->rowCount() > 0) { // <-- CORRIGIDO: rowCount() ao invés de == 1
             $erro = "Este email já está cadastrado!";
         } else {
             $hash = password_hash($senha, PASSWORD_DEFAULT);
-            
             $sql_insert = $pdo->prepare("INSERT INTO usuarios (nome, email, senha) VALUES(?, ?, ?)");
             $sql_insert->execute([$nome, $email, $hash]);
-            
-            if($sql_insert->rowCount() > 0){
+
+            if ($sql_insert->rowCount() > 0) {
                 $sucess = true;
-            }else{
+                // Regenera o CSRF após uso bem-sucedido
+                $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+            } else {
                 $erro = "Erro ao cadastrar usuário. Tente novamente.";
             }
         }
     }
 }
-
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -66,9 +70,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 </head>
 
 <body>
-    <?php if(isset($sucess)): ?>
+
+    <?php if (isset($sucess)): ?>
     <script>
-    // user registered
     Swal.fire({
         icon: 'success',
         title: 'Cadastro realizado!',
@@ -79,43 +83,53 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     });
     </script>
     <?php endif; ?>
-    <?php if(isset($erro)): ?>
+
+    <?php if (isset($erro)): ?>
     <script>
-    // error register
+    // CORRIGIDO: json_encode() é mais seguro que addslashes() para injeção em JS
     Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: '<?php echo addslashes($erro); ?>',
+        text: <?php echo json_encode($erro); ?>,
         confirmButtonText: 'Voltar'
     });
     </script>
     <?php endif; ?>
-    <a href="index.php"><button id="btn_return"><i class="bi bi-arrow-left-square-fill"></i>
-            Voltar</button></a>
+
+    <a href="index.php"><button id="btn_return"><i class="bi bi-arrow-left-square-fill"></i> Voltar</button></a>
     <h1>Dashnet</h1>
+
     <form action="cadastro.php" method="POST">
+        <!-- Token CSRF -->
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+
         <h3 id="subtitle">Insira as seguintes informações:</h3>
+
         <div class="form_div">
-            <input type="text" name="nome" required>
+            <input type="text" name="nome" maxlength="100" required>
             <label for="nome" class="form_label">Nome</label>
             <img src="https://res.cloudinary.com/dzbdewkbp/image/upload/v1770327839/homem-usuario_diarpq.png"
                 alt="Icone login" class="form_icons">
         </div>
+
         <div class="form_div">
-            <input type="text" name="email" required>
+            <input type="email" name="email" required>
             <label for="email" class="form_label">Email</label>
             <img src="https://res.cloudinary.com/dzbdewkbp/image/upload/v1770328078/e-mail_rh3ca6.png"
                 alt="Icone de email" class="form_icons">
         </div>
+
         <div class="form_div">
-            <input type="password" name="senha" id="input_senha" oninput="on_pass()" required>
+            <input type="password" name="senha" id="input_senha" oninput="on_pass()" minlength="8" required>
             <label for="senha" class="form_label">Senha</label>
             <img src="https://res.cloudinary.com/dzbdewkbp/image/upload/v1770328097/cadeado_kszx2t.png"
                 alt="Icone de senha" class="form_icons" id="icon_senha">
             <i class="bi bi-eye-fill" id="btn_senha" onclick="eye_pass()"></i>
         </div>
-        <Button type="submit">Finalizar</Button>
+
+        <button type="submit">Finalizar</button>
     </form>
+
 </body>
 <footer>
     <img src="imagens/logo-monni.png" alt="Logo">

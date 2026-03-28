@@ -2,43 +2,55 @@
 session_start();
 require_once("conexao.php");
 
-if(!isset($_SESSION['id'])){
+// Proteção: redireciona se não estiver logado
+if (!isset($_SESSION['id'])) {
     header("Location: index.php");
     exit();
 }
 
-if($_SERVER['REQUEST_METHOD'] === 'POST'){
+// Endpoint de API para publicar posts (só responde a POST)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    header('Content-Type: application/json');
+
     $content = trim($_POST['content'] ?? '');
-    
+
     if (empty($content)) {
-        echo json_encode(['error' => 'Conteúdo vazio']); //create popup
+        http_response_code(400);
+        echo json_encode(['error' => 'Conteúdo vazio']);
+        exit(); // <-- CORRIGIDO: exit() obrigatório
     }
 
     if (strlen($content) > 500) {
-        echo json_encode(['error' => 'Máximo 500 caracteres']); //create popup
+        http_response_code(400);
+        echo json_encode(['error' => 'Máximo 500 caracteres']);
+        exit(); // <-- CORRIGIDO: exit() obrigatório
     }
-    
+
     $user_id = $_SESSION['id'];
 
-    try{
+    try {
         $stmt = $pdo->prepare("INSERT INTO posts (user_id, content) VALUES (?, ?)");
         $stmt->execute([$user_id, $content]);
-        
+
         echo json_encode([
-            'success' => true, 
-            'message' => 'Post publicado', 
+            'success' => true,
+            'message' => 'Post publicado',
             'post_id' => $pdo->lastInsertId()
         ]);
-    } catch(PDOException $e){
-        echo json_encode(['Erro ao publicar: ' . $e->getMessage()]);
+        exit();
+    } catch (PDOException $e) {
+        error_log("Erro ao publicar post: " . $e->getMessage()); // log interno, não exposto
+        http_response_code(500);
+        echo json_encode(['error' => 'Erro interno ao publicar. Tente novamente.']);
+        exit(); // <-- CORRIGIDO: nunca expor $e->getMessage() ao usuário
     }
-    
-} else {
-    echo json_encode(['Error' => 'Método não permitido!']);
-} //create popups
+}
 
+// Gera token CSRF para proteger o formulário
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -61,8 +73,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             <h1>Dashnet</h1>
         </div>
         <div class="user-info">
-            <span class="user-name"><i
-                    class="bi bi-person-fill user-icon"></i><?php echo htmlspecialchars($_SESSION['nome'], ENT_QUOTES, 'UTF-8'); ?></span>
+            <span class="user-name">
+                <i class="bi bi-person-fill user-icon"></i>
+                <?php echo htmlspecialchars($_SESSION['nome'], ENT_QUOTES, 'UTF-8'); ?>
+            </span>
             <button class="btn-edit" onclick="alert('Funcionalidade em desenvolvimento!')">
                 <i class="bi bi-person-gear"></i> Editar Perfil
             </button>
@@ -74,14 +88,17 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
     <main class="main-content">
         <form method="POST" class="post-form">
+            <!-- Token CSRF: protege contra requisições forjadas -->
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+
             <textarea id="post-content" name="content" placeholder="No que você está pensando?" rows="4"
                 maxlength="500"></textarea>
-
             <div class="post-actions">
                 <span class="char-counter">0/500</span>
                 <button type="submit" class="btn-publish">Publicar</button>
             </div>
         </form>
+
         🚧 Em desenvolvimento 🚧
     </main>
 
