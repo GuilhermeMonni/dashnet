@@ -2,28 +2,28 @@
 session_start();
 require_once("conexao.php");
 
-// Gera token CSRF
+//token
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
-    // Validação CSRF
+    // Validação 
     if (empty($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         die("Requisição inválida.");
     }
 
-    $nome      = trim($_POST['nome'] ?? '');
+    $nome = trim($_POST['nome'] ?? '');
     $email_raw = trim($_POST['email'] ?? '');
-    $senha     = trim($_POST['senha'] ?? '');
+    $senha = trim($_POST['senha'] ?? '');
 
     if (empty($nome) || empty($email_raw) || empty($senha)) {
         $erro = "Preencha todos os campos!";
     } elseif (strlen($nome) < 3) {
         $erro = "O nome deve ter no mínimo 3 caracteres!";
     } elseif (strlen($nome) > 100) {
-        $erro = "O nome deve ter no máximo 100 caracteres!"; // <-- CORRIGIDO: limite máximo
+        $erro = "O nome deve ter no máximo 100 caracteres!"; 
     } elseif (!filter_var($email_raw, FILTER_VALIDATE_EMAIL)) {
         $erro = "E-mail inválido!";
     } elseif (strlen($senha) < 8) {
@@ -31,11 +31,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     } else {
         $email = filter_var($email_raw, FILTER_VALIDATE_EMAIL);
 
-        // Verifica se email já existe
+        // Verifica email
         $stmt = $pdo->prepare("SELECT id FROM usuarios WHERE email = ?");
         $stmt->execute([$email]);
 
-        if ($stmt->rowCount() > 0) { // <-- CORRIGIDO: rowCount() ao invés de == 1
+        if ($stmt->rowCount() > 0) { 
             $erro = "Este email já está cadastrado!";
         } else {
             $hash = password_hash($senha, PASSWORD_DEFAULT);
@@ -44,7 +44,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
             if ($sql_insert->rowCount() > 0) {
                 $sucess = true;
-                // Regenera o CSRF após uso bem-sucedido
                 $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
             } else {
                 $erro = "Erro ao cadastrar usuário. Tente novamente.";
@@ -86,7 +85,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     <?php if (isset($erro)): ?>
     <script>
-    // CORRIGIDO: json_encode() é mais seguro que addslashes() para injeção em JS
     Swal.fire({
         icon: 'error',
         title: 'Oops...',
@@ -100,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <h1>Dashnet</h1>
 
     <form action="cadastro.php" method="POST">
-        <!-- Token CSRF -->
+        <!-- Token  -->
         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
 
         <h3 id="subtitle">Insira as seguintes informações:</h3>

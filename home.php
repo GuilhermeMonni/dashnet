@@ -2,13 +2,11 @@
 session_start();
 require_once("conexao.php");
 
-// Proteção: redireciona se não estiver logado
 if (!isset($_SESSION['id'])) {
     header("Location: index.php");
     exit();
 }
 
-// Endpoint de API para publicar posts (só responde a POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json');
 
@@ -17,13 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($content)) {
         http_response_code(400);
         echo json_encode(['error' => 'Conteúdo vazio']);
-        exit(); // <-- CORRIGIDO: exit() obrigatório
+        exit(); 
     }
 
     if (strlen($content) > 500) {
         http_response_code(400);
         echo json_encode(['error' => 'Máximo 500 caracteres']);
-        exit(); // <-- CORRIGIDO: exit() obrigatório
+        exit();
     }
 
     $user_id = $_SESSION['id'];
@@ -39,14 +37,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
         exit();
     } catch (PDOException $e) {
-        error_log("Erro ao publicar post: " . $e->getMessage()); // log interno, não exposto
+        error_log("Erro ao publicar post: " . $e->getMessage()); 
         http_response_code(500);
         echo json_encode(['error' => 'Erro interno ao publicar. Tente novamente.']);
-        exit(); // <-- CORRIGIDO: nunca expor $e->getMessage() ao usuário
+        exit(); 
     }
 }
 
-// Gera token CSRF para proteger o formulário
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
@@ -88,7 +85,6 @@ if (empty($_SESSION['csrf_token'])) {
 
     <main class="main-content">
         <form method="POST" class="post-form">
-            <!-- Token CSRF: protege contra requisições forjadas -->
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
 
             <textarea id="post-content" name="content" placeholder="No que você está pensando?" rows="4"

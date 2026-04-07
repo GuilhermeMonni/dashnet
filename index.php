@@ -2,18 +2,15 @@
 session_start();
 require_once("conexao.php");
 
-// Se já está logado, redireciona direto para home
 if (isset($_SESSION['id'])) {
     header("Location: home.php");
     exit();
 }
 
-// Gera token CSRF
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-// Controle básico de tentativas de login (rate limiting simples)
 if (!isset($_SESSION['login_attempts'])) {
     $_SESSION['login_attempts'] = 0;
     $_SESSION['login_last_attempt'] = time();
@@ -21,19 +18,16 @@ if (!isset($_SESSION['login_attempts'])) {
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
-    // Validação CSRF
     if (empty($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         die("Requisição inválida.");
     }
 
-    // Rate limiting: bloqueia após 5 tentativas por 15 minutos
     if ($_SESSION['login_attempts'] >= 5) {
         $elapsed = time() - $_SESSION['login_last_attempt'];
-        if ($elapsed < 900) { // 15 minutos
+        if ($elapsed < 900) { 
             $minutos = ceil((900 - $elapsed) / 60);
             $error = "Muitas tentativas. Aguarde {$minutos} minuto(s).";
         } else {
-            // Reseta após o tempo
             $_SESSION['login_attempts'] = 0;
         }
     }
@@ -53,17 +47,15 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 $userLogin = $stmt->fetch(PDO::FETCH_ASSOC);
 
                 if ($userLogin && password_verify($senha, $userLogin['senha'])) {
-                    // Login bem-sucedido: reseta tentativas e regenera sessão
                     $_SESSION['login_attempts'] = 0;
                     session_regenerate_id(true);
                     $_SESSION['id']   = $userLogin['id'];
                     $_SESSION['nome'] = $userLogin['nome'];
-                    // Regenera CSRF após login
+                    
                     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
                     header("Location: home.php");
                     exit();
                 } else {
-                    // Incrementa tentativas falhas
                     $_SESSION['login_attempts']++;
                     $_SESSION['login_last_attempt'] = time();
                     $error = "E-mail ou senha incorretos!";
@@ -93,7 +85,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     <?php if (isset($error)): ?>
     <script>
-    // CORRIGIDO: json_encode() no lugar de addslashes()
     Swal.fire({
         icon: 'error',
         title: 'Oops...',
@@ -106,7 +97,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <h1>Dashnet</h1>
 
     <form action="index.php" method="POST">
-        <!-- Token CSRF -->
         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
 
         <h3 id="subtitle">Faça o login ou cadastre-se</h3>

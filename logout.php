@@ -1,10 +1,9 @@
 <?php
 session_start();
 
-// Limpa todos os dados da sessão
 $_SESSION = [];
 
-// Remove o cookie de sessão do navegador (logout completo)
+// Remove o cookie de sessão
 if (ini_get("session.use_cookies")) {
     $params = session_get_cookie_params();
     setcookie(
