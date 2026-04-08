@@ -26,10 +26,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $user_id = $_SESSION['id'];
     $nome = $_SESSION['nome'];
+    $date = new DateTime();
+    $postDate = $date->format('Y/m/d');
 
     try {
-        $stmt = $pdo->prepare("INSERT INTO posts (user_id, nome, content) VALUES (?, ?, ?)");
-        $stmt->execute([$user_id, $nome, $content]);
+        $stmt = $pdo->prepare("INSERT INTO posts (user_id, nome, content, created_at) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$user_id, $nome, $content, $postDate]);
 
         echo json_encode([
             'success' => true,
@@ -95,10 +97,14 @@ if (empty($_SESSION['csrf_token'])) {
                 <button type="submit" class="btn-publish">Publicar</button>
             </div>
         </form>
+
+        <section class="feed" id="feed">
+            <div id="posts-container">
+            </div>
+        </section>
     </main>
 
     <footer>
-        <img src="imagens/logo-monni.png" alt="Logo">
         <p>©2026 Dashnet • Gravataí, RS • gmonni20@gmail.com</p>
     </footer>
 </body>
