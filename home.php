@@ -25,10 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $user_id = $_SESSION['id'];
+    $nome = $_SESSION['nome'];
 
     try {
-        $stmt = $pdo->prepare("INSERT INTO posts (user_id, content) VALUES (?, ?)");
-        $stmt->execute([$user_id, $content]);
+        $stmt = $pdo->prepare("INSERT INTO posts (user_id, nome, content) VALUES (?, ?, ?)");
+        $stmt->execute([$user_id, $nome, $content]);
 
         echo json_encode([
             'success' => true,
@@ -94,8 +95,6 @@ if (empty($_SESSION['csrf_token'])) {
                 <button type="submit" class="btn-publish">Publicar</button>
             </div>
         </form>
-
-        🚧 Em desenvolvimento 🚧
     </main>
 
     <footer>
