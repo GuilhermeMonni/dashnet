@@ -1,12 +1,8 @@
-/* Customização dos popups */
-
-/* Overlay */
 .swal2-container {
   backdrop-filter: blur(5px);
   background-color: rgba(0, 0, 0, 0.6) !important;
 }
 
-/* Popup principal */
 .swal2-popup {
   font-family: var(--fontRoboto) !important;
   background-color: var(--colorBlack) !important;
@@ -17,7 +13,6 @@
   width: 28rem !important;
 }
 
-/* Título do popup */
 .swal2-title {
   font-family: var(--fontFarsan) !important;
   font-weight: bolder !important;
@@ -25,7 +20,6 @@
   color: var(--colorWhite) !important;
 }
 
-/* Texto do popup */
 .swal2-html-container {
   font-family: var(--fontRoboto) !important;
   font-size: 1em !important;
@@ -33,7 +27,6 @@
   font-weight: 400 !important;
 }
 
-/* Ícone de sucesso */
 .swal2-icon.swal2-success {
   border-color: var(--colorAzul) !important;
   margin: 0.5rem auto;
@@ -47,7 +40,6 @@
   border-color: var(--colorAzul) !important;
 }
 
-/* Ícone de erro */
 .swal2-icon.swal2-error {
   border-color: #d33 !important;
   margin: 0.5rem auto;
@@ -57,19 +49,16 @@
   background-color: #d33 !important;
 }
 
-/* Ícone de aviso */
 .swal2-icon.swal2-warning {
   border-color: #f8bb86 !important;
   color: #f8bb86 !important;
 }
 
-/* Ícone de informação */
 .swal2-icon.swal2-info {
   border-color: var(--colorAzul) !important;
   color: var(--colorAzul) !important;
 }
 
-/* Botão de confirmar */
 .swal2-confirm {
   font-family: var(--fontRoboto) !important;
   font-weight: 500 !important;
@@ -92,7 +81,6 @@
   cursor: pointer !important;
 }
 
-/* Botão de cancelar */
 .swal2-cancel {
   font-family: var(--fontRoboto) !important;
   font-weight: 500 !important;
@@ -114,13 +102,11 @@
   cursor: pointer !important;
 }
 
-/* Container dos botões */
 .swal2-actions {
   margin-top: 1.5rem !important;
   gap: 1rem !important;
 }
 
-/* Input dentro do popup (se usar) */
 .swal2-input {
   font-family: var(--fontRoboto) !important;
   background-color: var(--colorWhiteSnow) !important;
@@ -137,17 +123,14 @@
   box-shadow: 0 0 5px var(--colorAzul) !important;
 }
 
-/* Animação de entrada */
 .swal2-show {
   animation: swal2-show 0.3s !important;
 }
 
-/* Animação de saída */
 .swal2-hide {
   animation: swal2-hide 0.15s !important;
 }
 
-/* Fechar (X) */
 .swal2-close {
   color: lightgray !important;
   font-size: 1.5em !important;
@@ -159,7 +142,6 @@
   transform: scale(1.1) !important;
 }
 
-/* Timer progress bar */
 .swal2-timer-progress-bar {
   background-color: var(--colorAzul) !important;
 }
