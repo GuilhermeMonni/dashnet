@@ -8,15 +8,25 @@
   padding: 0;
 }
 :root {
-    /* colors */
-  --colorForm: #ffffff4f;
+  /* colors */
+  --colorForm: #ffffffb8;
   --colorAzul: #1a73e8;
   --colorAzulSecundary: #0D47A1;
+
+  --colorBg: #F6EFE2;
+  --colorSurface: #FFFaf2;
+  --colorSurfaceHover: #F1E6D6;
+  --colorBorder: #DCCDB8;
+
   --colorWhiteSnow: #F5F5F5;
   --colorWhite: #FFFFFF;
-  --colorBlack: #202124;
-  --colorPost: #1a1a1a;
+  --colorBlack: #191612;
+  --colorPost: #1b1714;
+  --colorTextSoft: #6E6255;
   --colorAlert: #e74c3c;
+
+  --colorAvatar: #D8C2A8;
+  --colorAvatarText: #0D47A1;
 
   /* fonts */
   --fontRoboto: "Roboto", sans-serif;

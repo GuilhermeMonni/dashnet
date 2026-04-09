@@ -1,6 +1,9 @@
 body{
-  overflow: scroll;
+    overflow-y: scroll;
+    background: var(--colorBg);
+    color: var(--colorBlack);
 }
+
 .header-home {
     background-color: var(--colorBlack);
     color: var(--colorWhite);
@@ -85,14 +88,14 @@ body{
 .main-content {
     padding: 3rem;
     margin: 3rem auto;
-    width: 80%;
+    width: 100%;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: start;
     align-items: center;
     gap: 2rem;
-    background-color: var(--colorForm);
+    background-color: var(--colorBg);
 }
 
 .post-form{

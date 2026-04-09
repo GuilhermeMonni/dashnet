@@ -1,6 +1,7 @@
 body {
   text-align: center;
-  background-color: var(--colorWhiteSnow);
+  background: var(--colorBg);
+  color: var(--colorBlack);
 }
 
 #btn_return {
