@@ -177,3 +177,43 @@ body{
     margin-top: 2rem;
 }
 
+footer {
+    margin-top: 50px;
+    padding: 1% 20%;
+    background-color: var(--colorBlack);
+    text-align: center;
+    box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.18);
+}
+
+footer p {
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: var(--colorWhite);
+    letter-spacing: 0.3px;
+}
+
+footer .brand {
+    font-family: "Roboto", sans-serif;
+    font-size: .9rem;
+    color: var(--colorAzul);
+    margin: 0 4px;
+    vertical-align: middle;
+}
+
+footer .city {
+    font-family: "Varela Round", sans-serif;
+    color: var(--colorWhite);
+}
+
+footer .email {
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    color: var(--colorAzul);
+}
+
+footer p:hover .brand {
+    color: #93c5fd;
+    transition: 0.3s ease;
+}

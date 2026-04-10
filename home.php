@@ -106,7 +106,11 @@ if (empty($_SESSION['csrf_token'])) {
     </main>
 
     <footer>
-        <p>©2026 Dashnet • Gravataí, RS • gmonni20@gmail.com</p>
+        <p>
+            ©2026 <span class="brand">Dashnet</span> •
+            <span class="city">Gravataí, RS</span> •
+            <span class="email">gmonni20@gmail.com</span>
+        </p>
     </footer>
 </body>
 

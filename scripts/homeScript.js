@@ -87,7 +87,7 @@ function logout() { //popup logout
         showCancelButton: true,
         confirmButtonText: 'Sim, sair',
         cancelButtonText: 'Cancelar',
-        confirmButtonColor: 'var(--colorAzulSecundary)',
+        confirmButtonColor: 'var(--colorAlert)',
         cancelButtonColor: '#6c757d'
     }).then((result) => {
         if (result.isConfirmed) {
