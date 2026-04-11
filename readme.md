@@ -27,7 +27,7 @@ Este é um sistema de login simples desenvolvido em PHP para a cadeira de Backen
 * style-root.css: Variáveis com fontes e cores para estilização.
 * style-sweet.css: Estilização dos pop-ups da página.
 
--Pasta scripts:
+- Pasta scripts:
 * eyesScript.js: Script para os inputs de senhas.
 * homeScript.js: Script geral do site.
 
