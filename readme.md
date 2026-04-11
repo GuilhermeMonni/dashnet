@@ -1,28 +1,35 @@
 # Sistema-login
-🚧Em manutenção🚧
+🚧Em desenvolvimento🚧
 
-Este é um sistema de login simples desenvolvido em PHP para a cadeira de Backend da faculdade, com as funcionalidades de registro e login de usuário. 
+Este é um sistema de login simples desenvolvido em PHP para a cadeira de Backend da faculdade, com as funcionalidades de registro e login de usuário. Expandi para uma "mini rede social" com a possibilidade de criar posts. Algumas outras funções estão sendo desenvolvidas, como: Editar perfil e posts, deixar likes e comentários, entre outros.
 
 # Funcionalidades
 * Registro de usuário
 * Login de usuário
 * Logout de usuário
+* Criar posts no feed.
+* Like nos posts (em desenvolvimento).
+* Comentários nos posts (em desenvolvimento).
+* Editar os posts criados (em desenvolvimento).
+* Edição de perfil (em desenvolvimento).
 
 # Estrutura do Projeto
-* index.js: Script com a função de ver a senha digitada na pag de login.
-* cad.js: Script com a função de ver a senha digitada na pag de cadastro.
-* cadastrado.php: Página para confirmar se o usuário foi cadastrado.
 * cadastro.php: Página para cadastrar usuário.
 * conexao.php: Arquivo de configuração com as credenciais do banco.
 * home.php: Página de início.
 * index.php: Página de login.
-* logout.php: Página de logout do usuário.
-* style_cad.css: Estilização da página cadastro (cadastro.php).
-* style01_home.css: Estilização da página de início (home.php).
-* style-index.css: Estilização da página de login (index.php).
 
+- Pasta estilos:
+* style-main.css: Estilização geral de todas as páginas.
+* style-home.css: Estilização da página principal.
+* style-posts.css: Estilização dos posts da página inicial.
+* style-responsive.css: Responsividade geral do site.
+* style-root.css: Variáveis com fontes e cores para estilização.
+* style-sweet.css: Estilização dos pop-ups da página.
 
-
+-Pasta scripts:
+* eyesScript.js: Script para os inputs de senhas.
+* homeScript.js: Script geral do site.
 
 # Observações
 Este projeto foi desenvolvido para fins didáticos.
