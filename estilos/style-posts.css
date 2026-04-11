@@ -80,6 +80,14 @@
   word-break: break-word;
 }
 
+.posts-empty{
+  text-align: center;
+  font-family: var(--fontRoboto);
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--colorBlack);
+}
+
 @media (max-width: 480px){
   .feed{
     padding: 1rem 0.75rem 2rem;

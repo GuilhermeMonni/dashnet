@@ -59,6 +59,7 @@ async function carregarPosts() {
 
         if (!data.posts || data.posts.length === 0) {
             container.innerHTML = 'Seja o primeiro a publicar um post 😄';
+            container.classList.add('posts-empty')
             return;
         }
 
