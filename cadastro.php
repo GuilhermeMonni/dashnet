@@ -61,6 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <link rel="stylesheet" href="estilos/style-main.css">
     <link rel="stylesheet" href="estilos/style-sweet.css">
     <link rel="stylesheet" href="estilos/style-root.css">
+    <link rel="stylesheet" href="estilos/style-responsive.css">
     <link rel="shortcut icon" href="favicon_io/favicon.ico" type="image/x-icon">
     <script src="scripts/eyesScript.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -130,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 </body>
 <footer>
-    <img src="imagens/logo-monni.png" alt="Logo">
+    <p>©2026 Dashnet • Gravataí, RS • gmonni20@gmail.com</p>
 </footer>
 
 </html>

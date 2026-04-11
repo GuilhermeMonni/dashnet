@@ -5,7 +5,7 @@ body {
 }
 
 #btn_return {
-  /* btn return pag */
+  /* btn return pag cadastro */
   position: absolute;
   top: 0;
   left: 0;
@@ -126,12 +126,6 @@ footer{
     bottom: 2px;
     font-family: var(--fontVarela);
     font-size: .8em;
-}
-footer img{
-  width: 3%;
-  position: fixed;
-  left: 2px;
-  bottom: 0;
 }
 
 

@@ -1,0 +1,222 @@
+@media (max-width: 1024px) {
+    #btn_return {
+        /* btn return pag cadastro */
+        font-size: .7rem;
+    }
+    .post-form {
+        width: 100%;
+    }
+    
+    .main-content {
+        padding: 2rem 1.5rem;
+    }
+    
+    footer {
+        padding: 1% 15%;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-home {
+        padding: 1rem 1.2rem;
+        height: 4.5rem;
+    }
+    
+    .logo-container h1 {
+        font-size: 1.6em;
+    }
+    
+    .user-info {
+        gap: 0.5rem;
+    }
+    
+    .user-name {
+        font-size: 0.9em;
+        display: none;
+    }
+    
+    .btn-edit span,
+    .btn-logout span {
+        display: none;
+    }
+    
+    .btn-edit,
+    .btn-logout {
+        padding: 0.5rem 0.8rem;
+    }
+    
+    .main-content {
+        padding: 1.5rem 1rem;
+        margin: 3.5rem auto;
+        gap: 1.5rem;
+    }
+    
+    .post-form {
+        width: 90%;
+    }
+    
+    form {
+        width: 90%;
+        max-width: 28rem;
+        min-height: 20rem;
+    }
+    
+    .form_div {
+        width: 100%;
+    }
+    
+    footer {
+        padding: 2% 5%;
+    }
+    
+    footer p {
+        font-size: 0.75rem;
+    }
+    
+    .btn-publish {
+        width: 25%;
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 550px) {
+    .header-home {
+        padding: 0.8rem 1rem;
+    }
+    
+    .logo-container h1 {
+        font-size: 1.4em;
+    }
+    
+    .btn-edit {
+        font-size: 0.8em;
+        padding: 0.4rem 0.6rem;
+    }
+    
+    .btn-logout {
+        font-size: 0.8em;
+        padding: 0.4rem 0.6rem;
+    }
+    
+    .main-content {
+        padding: 1rem 0.75rem;
+        margin: 3rem auto;
+    }
+    
+    .post-form {
+        width: 100%;
+    }
+    
+    .post-form textarea {
+        min-height: 90px;
+        padding: 0.8rem;
+        font-size: 0.9rem;
+    }
+    
+    .btn-publish {
+        width: 35%;
+        padding: 0.6rem;
+        font-size: 0.75rem;
+    }
+    
+    form {
+        width: 95%;
+        max-width: 24rem;
+        min-height: 18rem;
+        padding: 0.5rem;
+    }
+    
+    form p {
+        font-size: 0.85em;
+    }
+    
+    button {
+        margin: 1rem;
+        width: 100%;
+        max-width: 12rem;
+        height: 2.2rem;
+        font-size: 0.9em;
+    }
+    
+    footer p {
+        font-size: 0.85rem;
+        letter-spacing: 0.2px;
+    }
+    
+    footer .brand {
+        font-size: 1rem;
+    }
+    
+    #btn_return {
+        width: 3.8rem;
+    }
+    
+    h1 {
+        font-size: 2em;
+        margin: 4rem auto 0;
+    }
+    
+    #subtitle {
+        font-size: 0.9em;
+        margin: 1.5rem auto;
+    }
+}
+
+@media (max-width: 400px) {
+    .header-home {
+        padding: 0.7rem 0.8rem;
+        height: 4rem;
+    }
+    
+    .logo-container h1 {
+        font-size: 1.3em;
+    }
+    
+    .btn-edit,
+    .btn-logout {
+        padding: 0.35rem 0.5rem;
+        font-size: 0.75em;
+        border-radius: 8px;
+    }
+    
+    .main-content {
+        padding: 0.8rem 0.5rem;
+        margin: 2.8rem auto;
+        gap: 1.2rem;
+    }
+    
+    .post-form textarea {
+        min-height: 80px;
+        padding: 0.7rem;
+        font-size: 0.85rem;
+    }
+    
+    .btn-publish {
+        width: 45%;
+        padding: 0.55rem;
+        font-size: 0.7rem;
+        border-radius: 16px;
+    }
+    
+    form {
+        width: 100%;
+        max-width: 22rem;
+        min-height: 16rem;
+    }
+    
+    footer p {
+        font-size: 0.8rem;
+    }
+    
+    footer .brand {
+        font-size: 0.9rem;
+    }
+    
+    #btn_return {
+        width: 3.5rem;
+    }
+    
+    h1 {
+        font-size: 1.8em;
+    }
+}
