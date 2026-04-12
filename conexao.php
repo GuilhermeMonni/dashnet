@@ -1,32 +1,26 @@
 <?php
 
-$server_remote = false;
+$server_remote = true;
 
 if ($server_remote) {
-    $pdo = new PDO(
-        "mysql:host=" . getenv('DB_HOST') .
-            ";dbname=" . getenv('DB_NAME') .
-            ";charset=utf8mb4",
-        getenv('DB_USER'),
-        getenv('DB_PASS'),
-        [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-        ]
-    );
+    $db_host = 'sql111.infinityfree.com';
+    $db_name = 'if0_41200684_XXX';
+    $db_user = 'if0_41200684';
+    $db_pass = '6uwEnAXchkBjw71';
 } else {
-    $pdo = new PDO(
-        "mysql:host=localhost;dbname=database;charset=utf8mb4",
-        'root',
-        '',
-        [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-        ]
-    );
+    $db_host = 'localhost';
+    $db_name = 'database';
+    $db_user = 'root';
+    $db_pass = '';
 }
-
 try {
+    $dsn = "mysql:host={$db_host};dbname={$db_name};charset=utf8mb4";
+
+    $pdo = new PDO($dsn, $db_user, $db_pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+    ]);
+
     $pdo->query("SELECT 1");
 } catch (PDOException $e) {
     error_log("Erro de conexão: " . $e->getMessage());
