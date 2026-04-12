@@ -4,7 +4,7 @@ $server_remote = true;
 
 if ($server_remote) {
     $db_host = 'sql111.infinityfree.com';
-    $db_name = 'if0_41200684_XXX';
+    $db_name = 'if0_41200684_database';
     $db_user = 'if0_41200684';
     $db_pass = '6uwEnAXchkBjw71';
 } else {
