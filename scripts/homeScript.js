@@ -1,55 +1,58 @@
 //load posts
 document.addEventListener('DOMContentLoaded', () => {
-    const textarea = document.querySelector('#post-content');
-    const counter = document.querySelector('.char-counter');
-    const form = document.querySelector('.post-form');
+    const mainContent = document.querySelector('.main-content')
 
-    // Count car
-    textarea?.addEventListener('input', () => {
-        const len = textarea.value.length;
-        counter.textContent = `${len}/500`;
-        counter.style.color = len > 450 ? 'var(--colorAlert)' : '';
-    });
+    if(mainContent){
+        const textarea = document.querySelector('#post-content');
+        const counter = document.querySelector('.char-counter');
+        const form = document.querySelector('.post-form');
 
-    // Submit
-    form?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const btn = form.querySelector('.btn-publish');
-        btn.disabled = true;
-        btn.textContent = 'Publicando...';
+        // Count car
+        textarea?.addEventListener('input', () => {
+            const len = textarea.value.length;
+            counter.textContent = `${len}/500`;
+            counter.style.color = len > 450 ? 'var(--colorAlert)' : '';
+        });
 
-        const formData = new FormData(form);
+        // Submit
+        form?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = form.querySelector('.btn-publish');
+            btn.disabled = true;
+            btn.textContent = 'Publicando...';
 
-        try {
-            const res = await fetch('home.php', { method: 'POST', body: formData });
-            const data = await res.json();
+            const formData = new FormData(form);
 
-            if (data.success) {
-                textarea.value = '';
-                counter.textContent = '0/500';
-                await carregarPosts();
+            try {
+                const res = await fetch('home.php', { method: 'POST', body: formData });
+                const data = await res.json();
 
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Publicado!',
-                    text: 'Seu post foi publicado com sucesso.',
-                    timer: 1800,
-                    showConfirmButton: false
-                });
-            } else {
-                Swal.fire({ icon: 'error', title: 'Erro', text: data.error });
+                if (data.success) {
+                    textarea.value = '';
+                    counter.textContent = '0/500';
+                    await carregarPosts();
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Publicado!',
+                        text: 'Seu post foi publicado com sucesso.',
+                        timer: 1800,
+                        showConfirmButton: false
+                    });
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Erro', text: data.error });
+                }
+            } catch {
+                Swal.fire({ icon: 'error', title: 'Erro', text: 'Falha na conexão.' });
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Publicar';
             }
-        } catch {
-            Swal.fire({ icon: 'error', title: 'Erro', text: 'Falha na conexão.' });
-        } finally {
-            btn.disabled = false;
-            btn.textContent = 'Publicar';
-        }
-    });
+        });
 
-    carregarPosts();
-});
-
+        carregarPosts();
+    }
+})
 async function carregarPosts() {
     const container = document.getElementById('posts-container');
 
@@ -97,16 +100,6 @@ function logout() { //popup logout
     });
 }
 
-function iniciais(nome) {
-    return nome.trim().split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase();
-}
-
-function escapar(str) {
-    const d = document.createElement('div');
-    d.textContent = str;
-    return d.innerHTML;
-}
-
 function formatarData(dt) {
     const d = new Date(dt);
     return d.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
@@ -118,4 +111,10 @@ function perfil(){
 
 function home(){
     window.location.href = 'home.php'
+}
+
+function bioCounter() {
+    const bio = document.getElementById('bio')
+    const counter = document.getElementById('bio-counter')
+    counter.textContent = `${bio.value.length}/80`
 }

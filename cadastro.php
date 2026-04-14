@@ -64,6 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <link rel="stylesheet" href="estilos/style-responsive.css">
     <link rel="shortcut icon" href="favicon_io/favicon.ico" type="image/x-icon">
     <script src="scripts/eyesScript.js"></script>
+    <script src="scripts/homeScript.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <title>DashNet • cadastro</title>
@@ -116,6 +117,12 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             <label for="email" class="form_label">Email</label>
             <img src="https://res.cloudinary.com/dzbdewkbp/image/upload/v1770328078/e-mail_rh3ca6.png"
                 alt="Icone de email" class="form_icons">
+        </div>
+
+        <div class="form_div form_div_bio">
+            <textarea name="bio" id="bio" maxlength="80" rows="3" required oninput="bioCounter()"></textarea>
+            <label for="bio" class="form_label">Bio</label>
+            <span id="bio-counter">0/80</span>
         </div>
 
         <div class="form_div">

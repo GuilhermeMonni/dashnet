@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             if (!$email) {
                 $error = "E-mail ou senha incorretos!";
             } else {
-                $stmt = $pdo->prepare("SELECT id, nome, senha FROM usuarios WHERE email = ?");
+                $stmt = $pdo->prepare("SELECT id, nome, email, senha FROM usuarios WHERE email = ?");
                 $stmt->execute([$email]);
                 $userLogin = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -51,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     session_regenerate_id(true);
                     $_SESSION['id']   = $userLogin['id'];
                     $_SESSION['nome'] = $userLogin['nome'];
+                    $_SESSION['email'] = $userLogin['email'];
                     
                     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
                     header("Location: home.php");
