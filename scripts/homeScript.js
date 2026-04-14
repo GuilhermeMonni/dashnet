@@ -111,3 +111,11 @@ function formatarData(dt) {
     const d = new Date(dt);
     return d.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
+
+function perfil(){
+    window.location.href = 'perfil.php'
+}
+
+function home(){
+    window.location.href = 'home.php'
+}

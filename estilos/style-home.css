@@ -65,7 +65,7 @@ body{
     background-color: red;
 }
 
-.btn-edit{
+.btn-edit, .btn-home{
     background-color: var(--colorAzulSecundary);
     color: var(--colorWhite);
     border: none;
@@ -80,7 +80,7 @@ body{
     align-items: center;
     gap: 0.5rem;
 }
-.btn-edit:hover {
+.btn-edit:hover, .btn-home:hover {
     transform: scale(1.01);
     background-color: var(--colorAzul);
 }

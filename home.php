@@ -79,8 +79,8 @@ if (empty($_SESSION['csrf_token'])) {
                 <i class="bi bi-person-fill user-icon"></i>
                 <?php echo htmlspecialchars($_SESSION['nome'], ENT_QUOTES, 'UTF-8'); ?>
             </span>
-            <button class="btn-edit" onclick="alert('Funcionalidade em desenvolvimento!')">
-                <i class="bi bi-person-gear"></i> Editar Perfil
+            <button class="btn-edit" onclick="perfil()">
+                <i class="bi bi-person-gear"></i> Perfil
             </button>
             <button type="button" class="btn-logout" onclick="logout()">
                 <i class="bi bi-box-arrow-right"></i> Sair

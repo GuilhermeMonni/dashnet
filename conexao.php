@@ -1,6 +1,6 @@
 <?php
 
-$server_remote = true;
+$server_remote = false;
 
 if ($server_remote) {
     $db_host = 'sql111.infinityfree.com';

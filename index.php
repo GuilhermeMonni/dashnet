@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <script src="scripts/eyesScript.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="shortcut icon" href="favicon_io/favicon.ico" type="image/x-icon">
-    <title>DashNet - Login</title>
+    <title>DashNet • Login</title>
 </head>
 
 <body>
