@@ -17,8 +17,12 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $nome = trim($_POST['nome'] ?? '');
     $email_raw = trim($_POST['email'] ?? '');
     $senha = trim($_POST['senha'] ?? '');
+    $bio = trim($_POST['bio'] ?? '');
+    date_default_timezone_set('America/Sao_Paulo');
+    $dateNow = new DateTime();
+    $registDate = $dateNow->format('Y-m-d');
 
-    if (empty($nome) || empty($email_raw) || empty($senha)) {
+    if (empty($nome) || empty($email_raw) || empty($bio) || empty($senha)) {
         $erro = "Preencha todos os campos!";
     } elseif (strlen($nome) < 3) {
         $erro = "O nome deve ter no mínimo 3 caracteres!";
@@ -26,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $erro = "O nome deve ter no máximo 100 caracteres!"; 
     } elseif (!filter_var($email_raw, FILTER_VALIDATE_EMAIL)) {
         $erro = "E-mail inválido!";
-    } elseif (strlen($senha) < 8) {
+    }elseif (strlen($senha) < 8) {
         $erro = "A senha deve ter no mínimo 8 caracteres!";
     } else {
         $email = filter_var($email_raw, FILTER_VALIDATE_EMAIL);
@@ -39,8 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $erro = "Este email já está cadastrado!";
         } else {
             $hash = password_hash($senha, PASSWORD_DEFAULT);
-            $sql_insert = $pdo->prepare("INSERT INTO usuarios (nome, email, senha) VALUES(?, ?, ?)");
-            $sql_insert->execute([$nome, $email, $hash]);
+            $sql_insert = $pdo->prepare("INSERT INTO usuarios (nome, email, senha, bio, dataCadastro) VALUES(?, ?, ?, ?, ?)");
+            $sql_insert->execute([$nome, $email, $hash, $bio, $registDate]);
 
             if ($sql_insert->rowCount() > 0) {
                 $sucess = true;

@@ -79,7 +79,9 @@ async function carregarPosts() {
             </article>
         `).join('');
     } catch {
-        loading.textContent = 'Erro ao carregar posts.';
+            container.innerHTML = 'Seja o primeiro a publicar um post 😄';
+            container.classList.add('posts-empty')
+            return;
     }
 }
 

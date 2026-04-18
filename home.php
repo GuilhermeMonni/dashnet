@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $user_id = $_SESSION['id'];
-    $nome = $_SESSION['nome'];
+    $nome = $_SESSION['nome'];date_default_timezone_set('America/Sao_Paulo');
     $date = new DateTime();
     $postDate = $date->format('Y/m/d');
 
