@@ -69,7 +69,7 @@ async function carregarPosts() {
         container.innerHTML = data.posts.map(post => `
             <article class="post-card">
                 <div class="post-header">
-                    <div class="post-avatar">${iniciais(post.nome)}</div>
+                    <div class="post-avatar">${avatar(post.nome)}</div>
                     <div>
                         <strong class="post-author">${escapar(post.nome)}</strong>
                         <span class="post-date">${formatarData(post.created_at)}</span>
@@ -100,6 +100,16 @@ function logout() { //popup logout
             window.location.href = 'logout.php';
         }
     });
+}
+
+function avatar(nome) {
+ return nome.trim().split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase();
+}
+
+function escapar(str) {
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
 }
 
 function formatarData(dt) {
