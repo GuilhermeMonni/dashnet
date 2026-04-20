@@ -9,8 +9,9 @@
 
     $nome = $_SESSION['nome'];
     $email = $_SESSION['email'];
-    $bio = "Olá! Esse é o meu perfil na Dashnet.";
-    $dataCadastro = "Abril de 2026";
+    $bio = $_SESSION['bio'];
+    $dataCadastro = $_SESSION['dataCadastro'];
+    $dataCad = new DateTime($dataCadastro);
     $totalPosts = 12;
 ?>
 <!DOCTYPE html>
@@ -71,7 +72,7 @@
                     <h3>Informações pessoais</h3>
                     <p><i class="bi bi-envelope-fill"></i> <?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?>
                     </p>
-                    <p><i class="bi bi-calendar-check-fill"></i> Membro desde <?php echo $dataCadastro; ?></p>
+                    <p><i class="bi bi-calendar-check-fill"></i> Membro desde <?php echo $dataCad->format('d/m/Y'); ?></p>
                 </div>
 
                 <div class="profile-box">
