@@ -11,7 +11,7 @@
     header('Content-Type: application/json');
 
     try {
-        $stmt = $pdo->query("SELECT user_id, nome, content, created_at, idContent FROM posts ORDER BY created_at DESC LIMIT 50");
+        $stmt = $pdo->query("SELECT * FROM posts ORDER BY created_at DESC LIMIT 50");
         $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode(['success' => true, 'posts' => $posts]);
     } catch (PDOException $e) {

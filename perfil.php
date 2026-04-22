@@ -7,13 +7,36 @@
         exit();
     }
 
+    $id = $_SESSION['id'];
     $nome = $_SESSION['nome'];
     $email = $_SESSION['email'];
     $bio = $_SESSION['bio'];
     $dataCadastro = $_SESSION['dataCadastro'];
     $dataCad = new DateTime($dataCadastro);
-    $totalPosts = 12;
-?>
+
+    try{
+        $stmt = $pdo->prepare("SELECT * FROM posts WHERE user_id = :id");
+        $stmt->execute([':id' => $id]);
+        $myPosts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $profilePosts = json_encode(['success' => true, 'posts' => $myPosts]);
+        $countPosts = count($myPosts);
+        switch ($countPosts) {
+            case 0:
+                $qtdPosts = "Nenhum post publicado.";
+                break;
+            case 1:
+                $qtdPosts = (string)$countPosts . " Post publicado.";
+                break;
+            default:
+                $qtdPosts = (string)$countPosts . " Posts publicados.";
+                break;
+        }
+    } catch (PDOException $e){
+    error_log("Erro ao buscar os seus posts!" . $e->getMessage());
+    http_response_code(500);
+    }
+
+    ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -72,12 +95,13 @@
                     <h3>Informações pessoais</h3>
                     <p><i class="bi bi-envelope-fill"></i> <?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?>
                     </p>
-                    <p><i class="bi bi-calendar-check-fill"></i> Membro desde <?php echo $dataCad->format('d/m/Y'); ?></p>
+                    <p><i class="bi bi-calendar-check-fill"></i> Membro desde <?php echo $dataCad->format('d/m/Y'); ?>
+                    </p>
                 </div>
 
                 <div class="profile-box">
                     <h3>Atividade</h3>
-                    <p><i class="bi bi-pencil-square"></i> <?php echo $totalPosts; ?> posts publicados</p>
+                    <p><i class="bi bi-pencil-square"></i> <?php echo $qtdPosts; ?></p>
                     <p><i class="bi bi-person-badge-fill"></i> Perfil ativo</p>
                 </div>
 
@@ -87,6 +111,10 @@
                     <a onclick="home()" class="profile-action-btn secondary"><i class="bi bi-arrow-left-circle"></i>
                         Voltar ao feed</a>
                 </div>
+            </div>
+        </section>
+        <section class="feed" id="feed">
+            <div id="posts-container">
             </div>
         </section>
     </main>
