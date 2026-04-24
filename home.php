@@ -64,7 +64,7 @@ if (empty($_SESSION['csrf_token'])) {
     <link rel="stylesheet" href="estilos/style-responsive.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="./scripts/homeScript.js"></script>
+    <script src="./scripts/homeScript.js" defer></script>
     <link rel="shortcut icon" href="favicon_io/favicon.ico" type="image/x-icon">
     <title>Dashnet</title>
 </head>

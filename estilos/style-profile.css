@@ -4,8 +4,9 @@
     padding: 8rem 1.5rem 3rem;
     background: var(--colorBg);
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
 }
 
 .profile-card {

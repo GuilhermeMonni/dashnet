@@ -1,6 +1,7 @@
 //load posts
 document.addEventListener('DOMContentLoaded', () => {
     const mainContent = document.querySelector('.main-content')
+    const page = window.location.pathname
 
     if(mainContent){
         const textarea = document.querySelector('#post-content');
@@ -50,22 +51,43 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        carregarPosts();
     }
+    
+    carregarPosts(page);
 })
-async function carregarPosts() {
+async function carregarPosts(page) {
     const container = document.getElementById('posts-container');
-
+console.log(page)
     try {
-        const res = await fetch('getPosts.php');
-        const data = await res.json();
+        let url = '';
 
-        if (!data.posts || data.posts.length === 0) {
-            container.innerHTML = 'Seja o primeiro a publicar um post 😄';
-            container.classList.add('posts-empty')
+        if (page.includes('home.php')) {
+            url = 'getPosts.php';
+        } else if (page.includes('perfil.php')) {
+            url = 'getPostsProfile.php';
+        } else {
+            container.innerHTML = 'Página não reconhecida.';
             return;
         }
 
+        const res = await fetch(url);
+
+        if (!res.ok) {
+            throw new Error(`Erro HTTP: ${res.status}`);
+        }
+
+        const data = await res.json();
+
+        if (!data.posts || data.posts.length === 0) {
+            container.innerHTML = page.includes('perfil.php')
+                ? 'Publique seu primeiro post 😄'
+                : 'Seja o primeiro a publicar um post 😄';
+
+            container.classList.add('posts-empty');
+            return;
+        }
+
+        container.classList.remove('posts-empty');
         container.innerHTML = data.posts.map(post => `
             <article class="post-card">
                 <div class="post-header">
@@ -78,10 +100,11 @@ async function carregarPosts() {
                 <p class="post-content">${escapar(post.content)}</p>
             </article>
         `).join('');
-    } catch {
-            container.innerHTML = 'Seja o primeiro a publicar um post 😄';
-            container.classList.add('posts-empty')
-            return;
+
+    } catch (erro) {
+        console.error('Erro ao carregar posts:', erro);
+        container.innerHTML = 'Erro ao carregar os posts.';
+        container.classList.add('posts-empty');
     }
 }
 
@@ -102,11 +125,11 @@ function logout() { //popup logout
     });
 }
 
-function avatar(nome) {
+function avatar(nome) { //avatar user
  return nome.trim().split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase();
 }
 
-function escapar(str) {
+function escapar(str) { //clear text
     const d = document.createElement('div');
     d.textContent = str;
     return d.innerHTML;

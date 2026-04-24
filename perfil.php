@@ -20,17 +20,11 @@
         $myPosts = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $profilePosts = json_encode(['success' => true, 'posts' => $myPosts]);
         $countPosts = count($myPosts);
-        switch ($countPosts) {
-            case 0:
-                $qtdPosts = "Nenhum post publicado.";
-                break;
-            case 1:
-                $qtdPosts = (string)$countPosts . " Post publicado.";
-                break;
-            default:
-                $qtdPosts = (string)$countPosts . " Posts publicados.";
-                break;
-        }
+        match ($countPosts) {
+            0 => $qtdPosts = "Nenhum post publicado.",
+            1 => $qtdPosts = (string)$countPosts . " Post publicado.",
+            default => $qtdPosts = (string)$countPosts . " Posts publicados."
+        };
     } catch (PDOException $e){
     error_log("Erro ao buscar os seus posts!" . $e->getMessage());
     http_response_code(500);
@@ -45,12 +39,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="estilos/style-home.css">
     <link rel="stylesheet" href="estilos/style-root.css">
+    <link rel="stylesheet" href="estilos/style-posts.css">
     <link rel="stylesheet" href="estilos/style-sweet.css">
     <link rel="stylesheet" href="estilos/style-responsive.css">
     <link rel="stylesheet" href="estilos/style-profile.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="./scripts/homeScript.js"></script>
+    <script src="./scripts/homeScript.js" defer></script>
     <link rel="shortcut icon" href="favicon_io/favicon.ico" type="image/x-icon">
     <title>Meu Perfil • Dashnet</title>
 </head>
