@@ -53,27 +53,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
     
-    carregarPosts(page);
+    carregarPosts(page)
 })
 async function carregarPosts(page) {
-    const container = document.getElementById('posts-container');
-console.log(page)
+    const container = document.getElementById('posts-container')
+    
     try {
-        let url = '';
+        let url = ''
 
         if (page.includes('home.php')) {
-            url = 'getPosts.php';
+            url = 'getPosts.php'
         } else if (page.includes('perfil.php')) {
-            url = 'getPostsProfile.php';
+            url = 'getPostsProfile.php'
         } else {
-            container.innerHTML = 'Página não reconhecida.';
-            return;
+            console.error('Página não reconhecida.')
+            return
         }
 
-        const res = await fetch(url);
+        const res = await fetch(url)
 
         if (!res.ok) {
-            throw new Error(`Erro HTTP: ${res.status}`);
+            throw new Error(`Erro HTTP: ${res.status}`)
         }
 
         const data = await res.json();
@@ -81,10 +81,10 @@ console.log(page)
         if (!data.posts || data.posts.length === 0) {
             container.innerHTML = page.includes('perfil.php')
                 ? 'Publique seu primeiro post 😄'
-                : 'Seja o primeiro a publicar um post 😄';
+                : 'Seja o primeiro a publicar um post 😄'
 
-            container.classList.add('posts-empty');
-            return;
+            container.classList.add('posts-empty')
+            return
         }
 
         container.classList.remove('posts-empty');
@@ -99,12 +99,12 @@ console.log(page)
                 </div>
                 <p class="post-content">${escapar(post.content)}</p>
             </article>
-        `).join('');
+        `).join('')
 
     } catch (erro) {
-        console.error('Erro ao carregar posts:', erro);
-        container.innerHTML = 'Erro ao carregar os posts.';
-        container.classList.add('posts-empty');
+        console.error('Erro ao carregar posts:', erro)
+        container.innerHTML = 'Erro ao carregar os posts.'
+        container.classList.add('posts-empty')
     }
 }
 
