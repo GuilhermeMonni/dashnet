@@ -1,21 +1,24 @@
 .feed{
+  margin: 0 auto;
   width: 100%;
   min-height: 40vh;
   background: var(--colorBg);
-  padding: 2rem 1rem 3rem;
+  padding: 0;
 }
 
 #posts-container{
+  margin: 0 auto;
   width: 100%;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 25rem), 25rem));
+  display: flex;
+  flex-direction: column;
   justify-content: center;
-  gap: 1.5rem;
+  align-items: center;
 }
 
 .post-card{
+  margin: 1% auto;
   width: 100%;
-  max-width: 25rem;
+  max-width: 40rem;
   min-height: 5rem;
   background: var(--colorSurface);
   border: 1px solid var(--colorBorder);
@@ -24,13 +27,14 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  text-align: justify;
   gap: 1rem;
   box-shadow: 0 8px 24px rgba(43, 36, 28, 0.08);
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .post-card:hover{
-  transform: translateY(-4px);
+  transform: translateY(-1px);
   box-shadow: 0 14px 30px rgba(43, 36, 28, 0.12);
   border-color: #cdb99d;
 }
@@ -75,6 +79,7 @@
 .post-content{
   font-family: var(--fontRoboto);
   font-size: 1rem;
+  margin-left: 3rem;
   line-height: 1.65;
   color: var(--colorPost);
   word-break: break-word;
