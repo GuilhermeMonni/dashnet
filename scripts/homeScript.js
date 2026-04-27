@@ -15,6 +15,13 @@ document.addEventListener('DOMContentLoaded', () => {
             counter.style.color = len > 450 ? 'var(--colorAlert)' : '';
         });
 
+        //event enter
+        form?.addEventListener('keypress', (e) =>{
+            if(e.key === "Enter"){
+                document.querySelector(".btn-publish").click()
+            }
+        })
+
         // Submit
         form?.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -31,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data.success) {
                     textarea.value = '';
                     counter.textContent = '0/500';
-                    await carregarPosts();
+                    await carregarPosts(page);
 
                     Swal.fire({
                         icon: 'success',
@@ -49,15 +56,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.disabled = false;
                 btn.textContent = 'Publicar';
             }
-        });
 
+            await carregarPosts(page)
+        })
     }
-    
+
     carregarPosts(page)
 })
 async function carregarPosts(page) {
     const container = document.getElementById('posts-container')
-    
+
     try {
         let url = ''
 
@@ -65,10 +73,7 @@ async function carregarPosts(page) {
             url = 'getPosts.php'
         } else if (page.includes('perfil.php')) {
             url = 'getPostsProfile.php'
-        } else {
-            console.error('Página não reconhecida.')
-            return
-        }
+        } 
 
         const res = await fetch(url)
 
@@ -100,7 +105,6 @@ async function carregarPosts(page) {
                 <p class="post-content">${escapar(post.content)}</p>
             </article>
         `).join('')
-
     } catch (erro) {
         console.error('Erro ao carregar posts:', erro)
         container.innerHTML = 'Erro ao carregar os posts.'
