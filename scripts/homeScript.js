@@ -102,13 +102,45 @@ async function carregarPosts(page) {
                         <span class="post-date">${formatarData(post.created_at)}</span>
                     </div>
                 </div>
+
                 <p class="post-content">${escapar(post.content)}</p>
+
+                <div class="post-actions">
+                    <button class="post-action-btn" type="button" aria-label="Curtir post" onclick="like(this)">
+                        <i class="bi bi-heart"></i>
+                    </button>
+
+                    <button class="post-action-btn" type="button" aria-label="Comentar post" onclick="comment(this)">
+                        <i class="bi bi-chat-left-text"></i>
+                    </button>
+                </div>
             </article>
         `).join('')
     } catch (erro) {
         console.error('Erro ao carregar posts:', erro)
         container.innerHTML = 'Erro ao carregar os posts.'
         container.classList.add('posts-empty')
+    }
+}
+
+function like(button){
+    const icon = button.querySelector('i')
+
+    if (icon.classList.contains('bi-heart')) {
+        icon.classList.replace('bi-heart', 'bi-heart-fill')
+        icon.style.color = "var(--colorAlert)"
+    } else {
+        icon.classList.replace('bi-heart-fill', 'bi-heart')
+        icon.style.color = "var(--colorBlack)"
+    }
+}
+function comment(button){
+    const icon = button.querySelector('i')
+
+    if (icon.classList.contains('bi-chat-left-text')) {
+        icon.classList.replace('bi-chat-left-text', 'bi-chat-left-text-fill')
+    } else {
+        icon.classList.replace('bi-chat-left-text-fill', 'bi-chat-left-text')
     }
 }
 

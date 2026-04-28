@@ -79,7 +79,7 @@
 .post-content{
   font-family: var(--fontRoboto);
   font-size: 1rem;
-  margin-left: 3rem;
+  margin-left: 0 auto;
   line-height: 1.65;
   color: var(--colorPost);
   word-break: break-word;
@@ -91,6 +91,37 @@
   font-size: 1rem;
   line-height: 1.65;
   color: var(--colorBlack);
+}
+
+.post-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 8px;
+}
+
+.post-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border: 1px solid #dcdcdc;
+    border-radius: 999px;
+    background: transparent;
+    color: #555;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.post-action-btn:hover {
+    background: #f5f5f5;
+    color: #111;
+}
+
+.post-action-btn i {
+    font-size: 14px;
+    color: var(--colorBlack);
 }
 
 @media (max-width: 480px){
@@ -112,5 +143,19 @@
 
   .post-content{
     font-size: 0.95rem;
+  }
+
+  .post-actions{
+    gap: 0.5rem;
+    padding-top: 0.5rem;
+  }
+
+  .post-action-btn{
+    padding: 0.45rem 0.7rem;
+    font-size: 0.85rem;
+  }
+
+  .post-action-btn i{
+    font-size: 0.85rem;
   }
 }
