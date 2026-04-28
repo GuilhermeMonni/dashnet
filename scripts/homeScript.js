@@ -106,11 +106,13 @@ async function carregarPosts(page) {
                 <p class="post-content">${escapar(post.content)}</p>
 
                 <div class="post-actions">
-                    <button class="post-action-btn" type="button" aria-label="Curtir post" onclick="like(this)">
+                    <button class="post-action-btn" type="button" aria-label="Curtir post" onclick="like(${post.idContent}, this)">
+                        <span class="like-count">${Number(post.likes_count) || 0}</span>
                         <i class="bi bi-heart"></i>
                     </button>
 
                     <button class="post-action-btn" type="button" aria-label="Comentar post" onclick="comment(this)">
+                        <span class="comment-count">${Number(post.comments_count) || 0}</span>
                         <i class="bi bi-chat-left-text"></i>
                     </button>
                 </div>
@@ -123,24 +125,72 @@ async function carregarPosts(page) {
     }
 }
 
-function like(button){
-    const icon = button.querySelector('i')
+async function like(postId, button){ //btn like
+    try {
+        const res = await fetch('likePost.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ post_id: postId })
+        });
 
-    if (icon.classList.contains('bi-heart')) {
-        icon.classList.replace('bi-heart', 'bi-heart-fill')
-        icon.style.color = "var(--colorAlert)"
-    } else {
-        icon.classList.replace('bi-heart-fill', 'bi-heart')
-        icon.style.color = "var(--colorBlack)"
+        const data = await res.json();
+
+        if (!data.success) {
+            throw new Error(data.error || 'Erro ao curtir');
+        }
+
+        const icon = button.querySelector('i')
+
+        if (icon.classList.contains('bi-heart')) {
+            icon.classList.replace('bi-heart', 'bi-heart-fill')
+            icon.style.color = "var(--colorAlert)"
+        } else {
+            icon.classList.replace('bi-heart-fill', 'bi-heart')
+            icon.style.color = "var(--colorBlack)"
+        }
+
+        const counter = button.querySelector('.like-count');
+        if (counter) {
+            counter.textContent = data.likes_count
+        }
+
+    } catch (erro) {
+        console.error(erro)
     }
 }
-function comment(button){
-    const icon = button.querySelector('i')
+async function comment(postId, button){ //btn comment
+    try {
+        const res = await fetch('commentPost.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                post_id: postId,
+                content: content
+            })
+        });
 
-    if (icon.classList.contains('bi-chat-left-text')) {
-        icon.classList.replace('bi-chat-left-text', 'bi-chat-left-text-fill')
-    } else {
-        icon.classList.replace('bi-chat-left-text-fill', 'bi-chat-left-text')
+        const data = await res.json();
+
+        if (!data.success) {
+            throw new Error(data.error || 'Erro ao comentar');
+        }
+
+        const icon = button.querySelector('i')
+
+        if (icon.classList.contains('bi-chat-left-text')) {
+            icon.classList.replace('bi-chat-left-text', 'bi-chat-left-text-fill')
+        } else {
+            icon.classList.replace('bi-chat-left-text-fill', 'bi-chat-left-text')
+        }
+
+        console.log('Comentário salvo com sucesso');
+
+    } catch (erro) {
+        console.error(erro);
     }
 }
 
