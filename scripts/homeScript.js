@@ -92,8 +92,15 @@ async function carregarPosts(page) {
             return
         }
 
+        const post = await Promise.all(
+            data.posts.map(async (post) => { //view likes post
+            const getLikes = await getLikesCount(post.idContent)
+            post.likes = getLikes
+            return post
+        }))
+
         container.classList.remove('posts-empty');
-        container.innerHTML = data.posts.map(post => `
+        container.innerHTML = post.map(post => `
             <article class="post-card">
                 <div class="post-header">
                     <div class="post-avatar">${avatar(post.nome)}</div>
@@ -107,12 +114,12 @@ async function carregarPosts(page) {
 
                 <div class="post-actions">
                     <button class="post-action-btn" type="button" aria-label="Curtir post" onclick="like(${post.idContent}, this)">
-                        <span class="like-count">${Number(post.likes_count) || 0}</span>
+                        <span class="like-count">${Number(post.likes) || 0}</span>
                         <i class="bi bi-heart"></i>
                     </button>
 
                     <button class="post-action-btn" type="button" aria-label="Comentar post" onclick="comment(this)">
-                        <span class="comment-count">${Number(post.comments_count) || 0}</span>
+                        <span class="comment-count">${0}</span>
                         <i class="bi bi-chat-left-text"></i>
                     </button>
                 </div>
@@ -160,6 +167,22 @@ async function like(postId, button){ //btn like
         console.error(erro)
     }
 }
+async function getLikesCount(postId) {
+    try {
+        const res = await fetch(`likePost.php?post_id=${postId}`);
+        const data = await res.json()
+
+        if (data.success) {
+            return data.likes_count
+        }
+
+        return 0
+    } catch (erro) {
+        console.error('Erro ao buscar likes:', erro)
+        return 0
+    }
+}
+
 async function comment(postId, button){ //btn comment
     try {
         const res = await fetch('commentPost.php', {
