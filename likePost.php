@@ -7,11 +7,12 @@
     try {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $postId = (int)($_GET['post_id'] ?? 0);
+            $userId = (int)($_SESSION['id'] ?? 0);
 
-            if (!$postId) {
+            if (!$postId || !$userId) {
                 echo json_encode([
                     'success' => false,
-                    'error' => 'Post inválido'
+                    'error' => 'Post inválido ou sessão encerrada.'
                 ]);
                 exit;
             }
@@ -26,9 +27,21 @@
 
             $likesCount = (int)$stmt->fetchColumn();
 
+            $check = $pdo->prepare("
+                SELECT id
+                FROM likes
+                WHERE post_id = :post_id AND user_id = :user_id
+            ");
+            $check->bindValue(':post_id', $postId, PDO::PARAM_INT);
+            $check->bindValue(':user_id', $userId, PDO::PARAM_INT);
+            $check->execute();
+
+            $liked = $check->fetch();
+
             echo json_encode([
                 'success' => true,
-                'likes_count' => $likesCount
+                'likes_count' => $likesCount,
+                'liked' => $liked ? 1 : 0
             ]);
             exit;
         }

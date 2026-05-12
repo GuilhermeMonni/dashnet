@@ -95,7 +95,8 @@ async function carregarPosts(page) {
         const post = await Promise.all(
             data.posts.map(async (post) => { //view likes post
             const getLikes = await getLikesCount(post.idContent)
-            post.likes = getLikes
+            post.likes = getLikes.likes_count
+            post.liked = getLikes.liked
             return post
         }))
 
@@ -115,7 +116,8 @@ async function carregarPosts(page) {
                 <div class="post-actions">
                     <button class="post-action-btn" type="button" aria-label="Curtir post" onclick="like(${post.idContent}, this)">
                         <span class="like-count">${Number(post.likes) || 0}</span>
-                        <i class="bi bi-heart"></i>
+                        <i class="bi ${post.liked == 1 ? 'bi-heart-fill' : 'bi-heart'}"
+                        style="${post.liked == 1 ? 'color: var(--colorAlert);' : ''}"></i>
                     </button>
 
                     <button class="post-action-btn" type="button" aria-label="Comentar post" onclick="comment(this)">
@@ -157,12 +159,6 @@ async function like(postId, button){ //btn like
             icon.classList.replace('bi-heart-fill', 'bi-heart')
             icon.style.color = "var(--colorBlack)"
         }
-
-        const counter = button.querySelector('.like-count');
-        if (counter) {
-            counter.textContent = data.likes_count
-        }
-
     } catch (erro) {
         console.error(erro)
     }
@@ -173,7 +169,7 @@ async function getLikesCount(postId) {
         const data = await res.json()
 
         if (data.success) {
-            return data.likes_count
+            return data
         }
 
         return 0
