@@ -248,15 +248,15 @@ function formatarData(dt) {
     return d.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 
-function perfil(){
+function perfil(){ //btn go profile
     window.location.href = 'perfil.php'
 }
 
-function home(){
+function home(){ //btn go home
     window.location.href = 'home.php'
 }
 
-function bioCounter() {
+function bioCounter() { //count caracter bio
     const bio = document.getElementById('bio')
     const counter = document.getElementById('bio-counter')
     counter.textContent = `${bio.value.length}/80`
