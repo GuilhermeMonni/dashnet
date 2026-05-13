@@ -117,7 +117,7 @@ async function carregarPosts(page) {
                     <button class="post-action-btn" type="button" aria-label="Curtir post" onclick="like(${post.idContent}, this)">
                         <span class="like-count">${Number(post.likes) || 0}</span>
                         <i class="bi ${post.liked == 1 ? 'bi-heart-fill' : 'bi-heart'}"
-                        style="${post.liked == 1 ? 'color: var(--colorAlert);' : ''}"></i>
+                        style="${post.liked == 1 ? 'color: var(--colorAlert);' : 'color: var(--colorBlack);'}"></i>
                     </button>
 
                     <button class="post-action-btn" type="button" aria-label="Comentar post" onclick="comment(this)">
@@ -135,6 +135,7 @@ async function carregarPosts(page) {
 }
 
 async function like(postId, button){ //btn like
+    const page = window.location.pathname
     try {
         const res = await fetch('likePost.php', {
             method: 'POST',
@@ -155,9 +156,13 @@ async function like(postId, button){ //btn like
         if (icon.classList.contains('bi-heart')) {
             icon.classList.replace('bi-heart', 'bi-heart-fill')
             icon.style.color = "var(--colorAlert)"
+            await getLikesCount(postId)
+            await carregarPosts(page)
         } else {
             icon.classList.replace('bi-heart-fill', 'bi-heart')
             icon.style.color = "var(--colorBlack)"
+            await getLikesCount(postId)
+            await carregarPosts(page)
         }
     } catch (erro) {
         console.error(erro)
