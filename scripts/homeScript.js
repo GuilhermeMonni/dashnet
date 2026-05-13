@@ -225,9 +225,7 @@ function logout() { //popup logout
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Sim, sair',
-        cancelButtonText: 'Cancelar',
-        confirmButtonColor: 'var(--colorAlert)',
-        cancelButtonColor: '#6c757d'
+        cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
             window.location.href = 'logout.php';

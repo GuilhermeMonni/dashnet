@@ -108,6 +108,7 @@
     border-radius: 0.9rem;
     margin-bottom: 0.8rem;
     transition: all 0.3s ease;
+    cursor: pointer;
 }
 
 .profile-action-btn:hover {
