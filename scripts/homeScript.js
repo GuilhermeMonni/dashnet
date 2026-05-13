@@ -120,7 +120,7 @@ async function carregarPosts(page) {
                         style="${post.liked == 1 ? 'color: var(--colorAlert);' : 'color: var(--colorBlack);'}"></i>
                     </button>
 
-                    <button class="post-action-btn" type="button" aria-label="Comentar post" onclick="comment(this)">
+                    <button class="post-action-btn" type="button" aria-label="Comentar post" onclick="commentPost(${post.idContent},this)">
                         <span class="comment-count">${0}</span>
                         <i class="bi bi-chat-left-text"></i>
                     </button>
@@ -184,6 +184,38 @@ async function getLikesCount(postId) {
     }
 }
 
+function commentPost(postId, button){
+    if (document.querySelector(".comment-overlay")) return
+
+    const overlay = document.createElement("div");
+    overlay.className = "comment-overlay";
+
+    const modal = document.createElement("div");
+    modal.className = "comment-modal";
+
+    modal.innerHTML = `
+        <button class="close-comment" type="button">&times;</button>
+        <h3>Deixe um comentário</h3>
+        <textarea placeholder="Escreva seu comentário..."></textarea>
+        <button class="btn-send-comment" type="button">Comentar</button>
+    `;
+
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+
+    const textarea = modal.querySelector("textarea");
+    textarea.focus();
+
+    modal.querySelector(".close-comment").addEventListener("click", () => {
+        overlay.remove();
+    });
+
+    overlay.addEventListener("click", function(e) {
+        if (e.target === overlay) {
+        overlay.remove();
+        }
+    });
+}
 async function comment(postId, button){ //btn comment
     try {
         const res = await fetch('commentPost.php', {
