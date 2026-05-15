@@ -64,6 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
   carregarPosts(page);
 });
 async function carregarPosts(page) {
+  //load the posts
   const container = document.getElementById("posts-container");
 
   try {
@@ -94,8 +95,10 @@ async function carregarPosts(page) {
 
     const post = await Promise.all(
       data.posts.map(async (post) => {
-        //view likes post
+        //view likes and comments post
         const getLikes = await getLikesCount(post.idContent);
+        const getComments = await getCommentsCount(post.idContent)
+        post.comments = getComments.comments_count
         post.likes = getLikes.likes_count;
         post.liked = getLikes.liked;
         return post;
@@ -125,7 +128,7 @@ async function carregarPosts(page) {
                     </button>
 
                     <button class="post-action-btn" type="button" aria-label="Comentar post" onclick="commentPost(${post.idContent},this)">
-                        <span class="comment-count">${0}</span>
+                        <span class="comment-count">${Number(post.comments) || 0}</span>
                         <i class="bi bi-chat-left-text"></i>
                     </button>
                 </div>
@@ -140,8 +143,7 @@ async function carregarPosts(page) {
   }
 }
 
-async function like(postId, button) {
-  //btn like
+async function like(postId, button) {//btn like
   const page = window.location.pathname;
   try {
     const res = await fetch("likePost.php", {
@@ -191,7 +193,8 @@ async function getLikesCount(postId) {
   }
 }
 
-function commentPost(postId, button) {
+function commentPost(postId, button) { //div and textarea comments
+  const page = window.location.pathname;
   if (document.querySelector(".comment-overlay")) return;
 
   const overlay = document.createElement("div");
@@ -215,7 +218,7 @@ function commentPost(postId, button) {
 
   const btnComment = document.querySelector(".btn-send-comment");
 
-  btnComment.addEventListener("click", () => {
+  btnComment.addEventListener("click", async () => {
     const comment = textarea.value.trim();
 
     if (comment === "") {
@@ -224,6 +227,9 @@ function commentPost(postId, button) {
     }
 
     sendComment(postId, comment);
+    await getCommentsCount(postId)
+    await carregarPosts(page)
+    overlay.remove();
   });
 
   modal
@@ -259,6 +265,21 @@ async function sendComment(postId, comment) {
     console.log("Comentário salvo com sucesso: ", comment);
   } catch (erro) {
     console.error(erro);
+  }
+}
+async function getCommentsCount(postId) {
+  try {
+    const res = await fetch(`commentPost.php?post_id=${postId}`);
+    const data = await res.json();
+
+    if (data.success) {
+      return data;
+    }
+
+    return 0;
+  } catch (erro) {
+    console.error("Erro ao buscar comentários:", erro);
+    return 0;
   }
 }
 
@@ -317,8 +338,7 @@ function home() {
   window.location.href = "home.php";
 }
 
-function bioCounter() {
-  //count caracter bio
+function bioCounter() {//count caracter bio
   const bio = document.getElementById("bio");
   const counter = document.getElementById("bio-counter");
   counter.textContent = `${bio.value.length}/80`;

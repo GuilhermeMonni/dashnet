@@ -1,10 +1,40 @@
 <?php
-    session_start();
-    header('Content-Type: application/json');
+session_start();
+header('Content-Type: application/json');
 
-    require 'conexao.php';
+require 'conexao.php';
 
-    try {
+try {
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        $postId = (int)($_GET['post_id'] ?? 0);
+        $userID = (int)($_SESSION['id'] ?? 0);
+
+        if (!$postId || !$userID) {
+            echo json_encode([
+                'sucess' => false,
+                'error' => 'Post inválido ou sessão encerrada.'
+            ]);
+            exit;
+        }
+
+        $stmt = $pdo->prepare("
+                SELECT COUNT(*) 
+                FROM comments
+                WHERE post_id = :post_id
+            ");
+        $stmt->bindValue(':post_id', $postId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $commentsCount = (int)$stmt->fetchColumn();
+
+        echo json_encode([
+            'success' => true,
+            'comments_count' => $commentsCount
+        ]);
+        exit;
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data = json_decode(file_get_contents('php://input'), true);
 
         $postId = (int)($data['post_id'] ?? 0);
@@ -54,10 +84,10 @@
             'comment_id' => $commentId,
             'comments_count' => $commentsCount
         ]);
-
-    } catch (PDOException $e) {
-        echo json_encode([
-            'success' => false,
-            'error' => 'Erro no banco de dados'
-        ]);
     }
+} catch (PDOException $e) {
+    echo json_encode([
+        'success' => false,
+        'error' => 'Erro no banco de dados'
+    ]);
+}
