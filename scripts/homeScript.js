@@ -1,107 +1,111 @@
 //load posts
-document.addEventListener('DOMContentLoaded', () => {
-    const mainContent = document.querySelector('.main-content')
-    const page = window.location.pathname
+document.addEventListener("DOMContentLoaded", () => {
+  const mainContent = document.querySelector(".main-content");
+  const page = window.location.pathname;
 
-    if(mainContent){
-        const textarea = document.querySelector('#post-content');
-        const counter = document.querySelector('.char-counter');
-        const form = document.querySelector('.post-form');
+  if (mainContent) {
+    const textarea = document.querySelector("#post-content");
+    const counter = document.querySelector(".char-counter");
+    const form = document.querySelector(".post-form");
 
-        // Count car
-        textarea?.addEventListener('input', () => {
-            const len = textarea.value.length;
-            counter.textContent = `${len}/500`;
-            counter.style.color = len > 450 ? 'var(--colorAlert)' : '';
-        });
+    // Count car
+    textarea?.addEventListener("input", () => {
+      const len = textarea.value.length;
+      counter.textContent = `${len}/500`;
+      counter.style.color = len > 450 ? "var(--colorAlert)" : "";
+    });
 
-        //event enter
-        form?.addEventListener('keypress', (e) =>{
-            if(e.key === "Enter"){
-                document.querySelector(".btn-publish").click()
-            }
-        })
+    //event enter
+    form?.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        document.querySelector(".btn-publish").click();
+      }
+    });
 
-        // Submit
-        form?.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = form.querySelector('.btn-publish');
-            btn.disabled = true;
-            btn.textContent = 'Publicando...';
+    // Submit
+    form?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector(".btn-publish");
+      btn.disabled = true;
+      btn.textContent = "Publicando...";
 
-            const formData = new FormData(form);
+      const formData = new FormData(form);
 
-            try {
-                const res = await fetch('home.php', { method: 'POST', body: formData });
-                const data = await res.json();
-
-                if (data.success) {
-                    textarea.value = '';
-                    counter.textContent = '0/500';
-                    await carregarPosts(page);
-
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Publicado!',
-                        text: 'Seu post foi publicado com sucesso.',
-                        timer: 1800,
-                        showConfirmButton: false
-                    });
-                } else {
-                    Swal.fire({ icon: 'error', title: 'Erro', text: data.error });
-                }
-            } catch {
-                Swal.fire({ icon: 'error', title: 'Erro', text: 'Falha na conexão.' });
-            } finally {
-                btn.disabled = false;
-                btn.textContent = 'Publicar';
-            }
-
-            await carregarPosts(page)
-        })
-    }
-
-    carregarPosts(page)
-})
-async function carregarPosts(page) {
-    const container = document.getElementById('posts-container')
-
-    try {
-        let url = ''
-
-        if (page.includes('home.php')) {
-            url = 'getPosts.php'
-        } else if (page.includes('perfil.php')) {
-            url = 'getPostsProfile.php'
-        } 
-
-        const res = await fetch(url)
-
-        if (!res.ok) {
-            throw new Error(`Erro HTTP: ${res.status}`)
-        }
-
+      try {
+        const res = await fetch("home.php", { method: "POST", body: formData });
         const data = await res.json();
 
-        if (!data.posts || data.posts.length === 0) {
-            container.innerHTML = page.includes('perfil.php')
-                ? 'Publique seu primeiro post 😄'
-                : 'Seja o primeiro a publicar um post 😄'
+        if (data.success) {
+          textarea.value = "";
+          counter.textContent = "0/500";
+          await carregarPosts(page);
 
-            container.classList.add('posts-empty')
-            return
+          Swal.fire({
+            icon: "success",
+            title: "Publicado!",
+            text: "Seu post foi publicado com sucesso.",
+            timer: 1800,
+            showConfirmButton: false,
+          });
+        } else {
+          Swal.fire({ icon: "error", title: "Erro", text: data.error });
         }
+      } catch {
+        Swal.fire({ icon: "error", title: "Erro", text: "Falha na conexão." });
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Publicar";
+      }
 
-        const post = await Promise.all(
-            data.posts.map(async (post) => { //view likes post
-            const getLikes = await getLikesCount(post.idContent)
-            post.likes = getLikes.likes_count
-            post.liked = getLikes.liked
-            return post
-        }))
+      await carregarPosts(page);
+    });
+  }
 
-        container.classList.remove('posts-empty');
-        container.innerHTML = post.map(post => `
+  carregarPosts(page);
+});
+async function carregarPosts(page) {
+  const container = document.getElementById("posts-container");
+
+  try {
+    let url = "";
+
+    if (page.includes("home.php")) {
+      url = "getPosts.php";
+    } else if (page.includes("perfil.php")) {
+      url = "getPostsProfile.php";
+    }
+
+    const res = await fetch(url);
+
+    if (!res.ok) {
+      throw new Error(`Erro HTTP: ${res.status}`);
+    }
+
+    const data = await res.json();
+
+    if (!data.posts || data.posts.length === 0) {
+      container.innerHTML = page.includes("perfil.php")
+        ? "Publique seu primeiro post 😄"
+        : "Seja o primeiro a publicar um post 😄";
+
+      container.classList.add("posts-empty");
+      return;
+    }
+
+    const post = await Promise.all(
+      data.posts.map(async (post) => {
+        //view likes post
+        const getLikes = await getLikesCount(post.idContent);
+        post.likes = getLikes.likes_count;
+        post.liked = getLikes.liked;
+        return post;
+      }),
+    );
+
+    container.classList.remove("posts-empty");
+    container.innerHTML = post
+      .map(
+        (post) => `
             <article class="post-card">
                 <div class="post-header">
                     <div class="post-avatar">${avatar(post.nome)}</div>
@@ -116,8 +120,8 @@ async function carregarPosts(page) {
                 <div class="post-actions">
                     <button class="post-action-btn" type="button" aria-label="Curtir post" onclick="like(${post.idContent}, this)">
                         <span class="like-count">${Number(post.likes) || 0}</span>
-                        <i class="bi ${post.liked == 1 ? 'bi-heart-fill' : 'bi-heart'}"
-                        style="${post.liked == 1 ? 'color: var(--colorAlert);' : 'color: var(--colorBlack);'}"></i>
+                        <i class="bi ${post.liked == 1 ? "bi-heart-fill" : "bi-heart"}"
+                        style="${post.liked == 1 ? "color: var(--colorAlert);" : "color: var(--colorBlack);"}"></i>
                     </button>
 
                     <button class="post-action-btn" type="button" aria-label="Comentar post" onclick="commentPost(${post.idContent},this)">
@@ -126,170 +130,196 @@ async function carregarPosts(page) {
                     </button>
                 </div>
             </article>
-        `).join('')
-    } catch (erro) {
-        console.error('Erro ao carregar posts:', erro)
-        container.innerHTML = 'Erro ao carregar os posts.'
-        container.classList.add('posts-empty')
-    }
+        `,
+      )
+      .join("");
+  } catch (erro) {
+    console.error("Erro ao carregar posts:", erro);
+    container.innerHTML = "Erro ao carregar os posts.";
+    container.classList.add("posts-empty");
+  }
 }
 
-async function like(postId, button){ //btn like
-    const page = window.location.pathname
-    try {
-        const res = await fetch('likePost.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ post_id: postId })
-        });
+async function like(postId, button) {
+  //btn like
+  const page = window.location.pathname;
+  try {
+    const res = await fetch("likePost.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ post_id: postId }),
+    });
 
-        const data = await res.json();
+    const data = await res.json();
 
-        if (!data.success) {
-            throw new Error(data.error || 'Erro ao curtir');
-        }
-
-        const icon = button.querySelector('i')
-
-        if (icon.classList.contains('bi-heart')) {
-            icon.classList.replace('bi-heart', 'bi-heart-fill')
-            icon.style.color = "var(--colorAlert)"
-            await getLikesCount(postId)
-            await carregarPosts(page)
-        } else {
-            icon.classList.replace('bi-heart-fill', 'bi-heart')
-            icon.style.color = "var(--colorBlack)"
-            await getLikesCount(postId)
-            await carregarPosts(page)
-        }
-    } catch (erro) {
-        console.error(erro)
+    if (!data.success) {
+      throw new Error(data.error || "Erro ao curtir");
     }
+
+    const icon = button.querySelector("i");
+
+    if (icon.classList.contains("bi-heart")) {
+      icon.classList.replace("bi-heart", "bi-heart-fill");
+      icon.style.color = "var(--colorAlert)";
+      await getLikesCount(postId);
+      await carregarPosts(page);
+    } else {
+      icon.classList.replace("bi-heart-fill", "bi-heart");
+      icon.style.color = "var(--colorBlack)";
+      await getLikesCount(postId);
+      await carregarPosts(page);
+    }
+  } catch (erro) {
+    console.error(erro);
+  }
 }
 async function getLikesCount(postId) {
-    try {
-        const res = await fetch(`likePost.php?post_id=${postId}`);
-        const data = await res.json()
+  try {
+    const res = await fetch(`likePost.php?post_id=${postId}`);
+    const data = await res.json();
 
-        if (data.success) {
-            return data
-        }
-
-        return 0
-    } catch (erro) {
-        console.error('Erro ao buscar likes:', erro)
-        return 0
+    if (data.success) {
+      return data;
     }
+
+    return 0;
+  } catch (erro) {
+    console.error("Erro ao buscar likes:", erro);
+    return 0;
+  }
 }
 
-function commentPost(postId, button){
-    if (document.querySelector(".comment-overlay")) return
+function commentPost(postId, button) {
+  if (document.querySelector(".comment-overlay")) return;
 
-    const overlay = document.createElement("div");
-    overlay.className = "comment-overlay";
+  const overlay = document.createElement("div");
+  overlay.className = "comment-overlay";
 
-    const modal = document.createElement("div");
-    modal.className = "comment-modal";
+  const modal = document.createElement("div");
+  modal.className = "comment-modal";
 
-    modal.innerHTML = `
+  modal.innerHTML = `
         <button class="close-comment" type="button">&times;</button>
         <h3>Deixe um comentário</h3>
         <textarea placeholder="Escreva seu comentário..."></textarea>
         <button class="btn-send-comment" type="button">Comentar</button>
     `;
 
-    overlay.appendChild(modal);
-    document.body.appendChild(overlay);
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
 
-    const textarea = modal.querySelector("textarea");
-    textarea.focus();
+  const textarea = modal.querySelector("textarea");
+  textarea.focus();
 
-    modal.querySelector(".close-comment").addEventListener("click", () => {
-        overlay.remove();
-    });
+  const btnComment = document.querySelector(".btn-send-comment");
 
-    overlay.addEventListener("click", function(e) {
-        if (e.target === overlay) {
-        overlay.remove();
-        }
-    });
-}
-async function comment(postId, button){ //btn comment
-    try {
-        const res = await fetch('commentPost.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                post_id: postId,
-                content: content
-            })
-        });
+  btnComment.addEventListener("click", () => {
+    const comment = textarea.value.trim();
 
-        const data = await res.json();
-
-        if (!data.success) {
-            throw new Error(data.error || 'Erro ao comentar');
-        }
-
-        const icon = button.querySelector('i')
-
-        if (icon.classList.contains('bi-chat-left-text')) {
-            icon.classList.replace('bi-chat-left-text', 'bi-chat-left-text-fill')
-        } else {
-            icon.classList.replace('bi-chat-left-text-fill', 'bi-chat-left-text')
-        }
-
-        console.log('Comentário salvo com sucesso');
-
-    } catch (erro) {
-        console.error(erro);
+    if (comment === "") {
+      alert("Digite um comentário");
+      return;
     }
-}
 
-function logout() { //popup logout
-    Swal.fire({
-        title: 'Deseja sair?',
-        text: 'Você será desconectado do sistema',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Sim, sair',
-        cancelButtonText: 'Cancelar'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            window.location.href = 'logout.php';
-        }
+    sendComment(postId, comment);
+  });
+
+  modal
+    .querySelector(".close-comment")
+    .addEventListener("click", () => overlay.remove());
+
+  overlay.addEventListener("click", function (e) {
+    if (e.target === overlay) {
+      overlay.remove();
+    }
+  });
+}
+async function sendComment(postId, comment) {
+  //comment the post
+  try {
+    const res = await fetch("commentPost.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        post_id: postId,
+        content: comment,
+      }),
     });
+
+    const data = await res.json();
+
+    if (!data.success) {
+      throw new Error(data.error || "Erro ao comentar");
+    }
+
+    console.log("Comentário salvo com sucesso: ", comment);
+  } catch (erro) {
+    console.error(erro);
+  }
 }
 
-function avatar(nome) { //avatar user
- return nome.trim().split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase();
+function logout() {
+  //popup logout
+  Swal.fire({
+    title: "Deseja sair?",
+    text: "Você será desconectado do sistema",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Sim, sair",
+    cancelButtonText: "Cancelar",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = "logout.php";
+    }
+  });
 }
 
-function escapar(str) { //clear text
-    const d = document.createElement('div');
-    d.textContent = str;
-    return d.innerHTML;
+function avatar(nome) {
+  //avatar user
+  return nome
+    .trim()
+    .split(" ")
+    .map((p) => p[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+}
+
+function escapar(str) {
+  //clear text
+  const d = document.createElement("div");
+  d.textContent = str;
+  return d.innerHTML;
 }
 
 function formatarData(dt) {
-    const d = new Date(dt);
-    return d.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  const d = new Date(dt);
+  return d.toLocaleString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
-function perfil(){ //btn go profile
-    window.location.href = 'perfil.php'
+function perfil() {
+  //btn go profile
+  window.location.href = "perfil.php";
 }
 
-function home(){ //btn go home
-    window.location.href = 'home.php'
+function home() {
+  //btn go home
+  window.location.href = "home.php";
 }
 
-function bioCounter() { //count caracter bio
-    const bio = document.getElementById('bio')
-    const counter = document.getElementById('bio-counter')
-    counter.textContent = `${bio.value.length}/80`
+function bioCounter() {
+  //count caracter bio
+  const bio = document.getElementById("bio");
+  const counter = document.getElementById("bio-counter");
+  counter.textContent = `${bio.value.length}/80`;
 }
