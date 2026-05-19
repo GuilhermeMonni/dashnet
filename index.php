@@ -119,7 +119,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 alt="Icone senha" class="form_icons" id="icon_senha">
             <i class="bi bi-eye-fill" id="btn_senha" onclick="eye_pass()"></i>
         </div>
-
         <div class="cadastro">
             <p>Não tem uma conta? <a href="cadastro.php" target="_self">Cadastre-se</a></p>
         </div>

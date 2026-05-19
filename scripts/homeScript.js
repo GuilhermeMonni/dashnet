@@ -97,10 +97,12 @@ async function carregarPosts(page) {
       data.posts.map(async (post) => {
         //view likes and comments post
         const getLikes = await getLikesCount(post.idContent);
-        const getComments = await getCommentsCount(post.idContent)
-        post.comments = getComments.comments_count
+        const getComments = await getCommentsCount(post.idContent);
+        post.comments = getComments.comments_content;
+        post.commentsCount = getComments.comments_count;
         post.likes = getLikes.likes_count;
         post.liked = getLikes.liked;
+        console.log(post);
         return post;
       }),
     );
@@ -121,17 +123,36 @@ async function carregarPosts(page) {
                 <p class="post-content">${escapar(post.content)}</p>
 
                 <div class="post-actions">
-                    <button class="post-action-btn" type="button" aria-label="Curtir post" onclick="like(${post.idContent}, this)">
-                        <span class="like-count">${Number(post.likes) || 0}</span>
-                        <i class="bi ${post.liked == 1 ? "bi-heart-fill" : "bi-heart"}"
-                        style="${post.liked == 1 ? "color: var(--colorAlert);" : "color: var(--colorBlack);"}"></i>
-                    </button>
+                  <div class="post-actions-top">
+                      <button class="post-action-btn" type="button" aria-label="Curtir post" onclick="like(${post.idContent}, this)">
+                          <span class="like-count">${Number(post.likes) || 0}</span>
+                          <i class="bi ${post.liked == 1 ? "bi-heart-fill" : "bi-heart"}"
+                            style="${post.liked == 1 ? "color: var(--colorAlert);" : "color: var(--colorBlack);"}"></i>
+                      </button>
 
-                    <button class="post-action-btn" type="button" aria-label="Comentar post" onclick="commentPost(${post.idContent},this)">
-                        <span class="comment-count">${Number(post.comments) || 0}</span>
-                        <i class="bi bi-chat-left-text"></i>
-                    </button>
-                </div>
+                      <button class="post-action-btn" type="button" aria-label="Abrir comentários" onclick="commentPost(${post.idContent}, this)">
+                          <span class="comment-count">${Number(post.commentsCount) || 0}</span>
+                          <i class="bi bi-chat-left-text"></i>
+                      </button>
+                  </div>
+
+                  <div class="comment-box">
+                      <label for="commentInput-${post.idContent}" class="sr-only">Escreva um comentário</label>
+
+                      <textarea
+                          name="commentInput-${post.idContent}"
+                          id="commentInput-${post.idContent}"
+                          class="comment-textarea"
+                          placeholder="Escreva um comentário..."
+                          maxlength="500"
+                          rows="2"
+                      ></textarea>
+
+                      <button class="comment-submit-btn" type="button" onclick="sendComment(${post.idContent}, this)">
+                          Enviar
+                      </button>
+                  </div>
+              </div>
             </article>
         `,
       )
@@ -143,7 +164,8 @@ async function carregarPosts(page) {
   }
 }
 
-async function like(postId, button) {//btn like
+async function like(postId, button) {
+  //btn like
   const page = window.location.pathname;
   try {
     const res = await fetch("likePost.php", {
@@ -193,7 +215,8 @@ async function getLikesCount(postId) {
   }
 }
 
-function commentPost(postId, button) { //div and textarea comments
+function commentPost(postId, button) {
+  //div and textarea comments
   const page = window.location.pathname;
   if (document.querySelector(".comment-overlay")) return;
 
@@ -227,8 +250,8 @@ function commentPost(postId, button) { //div and textarea comments
     }
 
     sendComment(postId, comment);
-    await getCommentsCount(postId)
-    await carregarPosts(page)
+    await getCommentsCount(postId);
+    await carregarPosts(page);
     overlay.remove();
   });
 
@@ -338,7 +361,8 @@ function home() {
   window.location.href = "home.php";
 }
 
-function bioCounter() {//count caracter bio
+function bioCounter() {
+  //count caracter bio
   const bio = document.getElementById("bio");
   const counter = document.getElementById("bio-counter");
   counter.textContent = `${bio.value.length}/80`;

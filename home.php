@@ -99,7 +99,6 @@ if (empty($_SESSION['csrf_token'])) {
                 <button type="submit" class="btn-publish">Publicar</button>
             </div>
         </form>
-
         <section class="feed" id="feed">
             <div id="posts-container">
             </div>
