@@ -93,20 +93,6 @@
   color: var(--colorBlack);
 }
 
-.post-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    width: 100%;
-    margin-top: 14px;
-}
-
-.post-actions-top {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
 .post-action-btn {
     display: inline-flex;
     align-items: center;
@@ -129,9 +115,16 @@
 
 .comment-box {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     gap: 10px;
     width: 100%;
+}
+
+.btn-actions{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .comment-textarea {
@@ -163,7 +156,7 @@
 
 .comment-submit-btn {
     min-width: 96px;
-    height: 52px;
+    height: 40px;
     padding: 0 18px;
     border: none;
     border-radius: 14px;
@@ -237,7 +230,7 @@
 
 .btn-send-comment {
   background: var(--colorAzul);
-  color: #fff;
+  color: var(--colorWhite);
   border: none;
   border-radius: 10px;
   padding: 12px 18px;
@@ -295,11 +288,6 @@
 
   .post-content{
     font-size: 0.95rem;
-  }
-
-  .post-actions{
-    gap: 0.5rem;
-    padding-top: 0.5rem;
   }
 
   .post-action-btn{

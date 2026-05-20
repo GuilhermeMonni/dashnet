@@ -11,7 +11,7 @@ if ($server_remote) {
     $db_host = 'localhost';
     $db_name = 'database';
     $db_user = 'root';
-    $db_pass = '';
+    $db_pass = 'root';
 }
 try {
     $dsn = "mysql:host={$db_host};dbname={$db_name};charset=utf8mb4";

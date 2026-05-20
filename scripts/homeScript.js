@@ -102,7 +102,6 @@ async function carregarPosts(page) {
         post.commentsCount = getComments.comments_count;
         post.likes = getLikes.likes_count;
         post.liked = getLikes.liked;
-        console.log(post);
         return post;
       }),
     );
@@ -122,20 +121,6 @@ async function carregarPosts(page) {
 
                 <p class="post-content">${escapar(post.content)}</p>
 
-                <div class="post-actions">
-                  <div class="post-actions-top">
-                      <button class="post-action-btn" type="button" aria-label="Curtir post" onclick="like(${post.idContent}, this)">
-                          <span class="like-count">${Number(post.likes) || 0}</span>
-                          <i class="bi ${post.liked == 1 ? "bi-heart-fill" : "bi-heart"}"
-                            style="${post.liked == 1 ? "color: var(--colorAlert);" : "color: var(--colorBlack);"}"></i>
-                      </button>
-
-                      <button class="post-action-btn" type="button" aria-label="Abrir comentários" onclick="commentPost(${post.idContent}, this)">
-                          <span class="comment-count">${Number(post.commentsCount) || 0}</span>
-                          <i class="bi bi-chat-left-text"></i>
-                      </button>
-                  </div>
-
                   <div class="comment-box">
                       <label for="commentInput-${post.idContent}" class="sr-only">Escreva um comentário</label>
 
@@ -148,9 +133,22 @@ async function carregarPosts(page) {
                           rows="2"
                       ></textarea>
 
-                      <button class="comment-submit-btn" type="button" onclick="sendComment(${post.idContent}, this)">
-                          Enviar
-                      </button>
+                      <div class="btn-actions">
+                        <button class="comment-submit-btn" type="button" onclick="sendComment(${post.idContent}, this)">
+                            Enviar
+                        </button>
+
+                        <button class="post-action-btn" type="button" aria-label="Curtir post" onclick="like(${post.idContent}, this)">
+                            <span class="like-count">${Number(post.likes) || 0}</span>
+                            <i class="bi ${post.liked == 1 ? "bi-heart-fill" : "bi-heart"}"
+                              style="${post.liked == 1 ? "color: var(--colorAlert);" : "color: var(--colorBlack);"}"></i>
+                        </button>
+
+                        <button class="post-action-btn" type="button" aria-label="Abrir comentários" onclick="document.getElementById('commentInput-${post.idContent}').focus()">
+                            <span class="comment-count">${Number(post.commentsCount) || 0}</span>
+                            <i class="bi bi-chat-left-text"></i>
+                        </button>
+                      </div>
                   </div>
               </div>
             </article>
@@ -215,58 +213,14 @@ async function getLikesCount(postId) {
   }
 }
 
-function commentPost(postId, button) {
-  //div and textarea comments
-  const page = window.location.pathname;
-  if (document.querySelector(".comment-overlay")) return;
-
-  const overlay = document.createElement("div");
-  overlay.className = "comment-overlay";
-
-  const modal = document.createElement("div");
-  modal.className = "comment-modal";
-
-  modal.innerHTML = `
-        <button class="close-comment" type="button">&times;</button>
-        <h3>Deixe um comentário</h3>
-        <textarea placeholder="Escreva seu comentário..."></textarea>
-        <button class="btn-send-comment" type="button">Comentar</button>
-    `;
-
-  overlay.appendChild(modal);
-  document.body.appendChild(overlay);
-
-  const textarea = modal.querySelector("textarea");
-  textarea.focus();
-
-  const btnComment = document.querySelector(".btn-send-comment");
-
-  btnComment.addEventListener("click", async () => {
-    const comment = textarea.value.trim();
-
-    if (comment === "") {
-      alert("Digite um comentário");
-      return;
-    }
-
-    sendComment(postId, comment);
-    await getCommentsCount(postId);
-    await carregarPosts(page);
-    overlay.remove();
-  });
-
-  modal
-    .querySelector(".close-comment")
-    .addEventListener("click", () => overlay.remove());
-
-  overlay.addEventListener("click", function (e) {
-    if (e.target === overlay) {
-      overlay.remove();
-    }
-  });
-}
-async function sendComment(postId, comment) {
+async function sendComment(postId, btn) {
   //comment the post
+  const page = window.location.pathname;
+  const textarea = document.getElementById(`commentInput-${postId}`);
+  const comment = textarea.value.trim();
+
+  if (!comment) return;
+
   try {
     const res = await fetch("commentPost.php", {
       method: "POST",
@@ -286,6 +240,8 @@ async function sendComment(postId, comment) {
     }
 
     console.log("Comentário salvo com sucesso: ", comment);
+    await getCommentsCount(postId);
+    await carregarPosts(page);
   } catch (erro) {
     console.error(erro);
   }
