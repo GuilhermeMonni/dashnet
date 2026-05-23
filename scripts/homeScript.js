@@ -271,6 +271,7 @@ function logout() {
     showCancelButton: true,
     confirmButtonText: "Sim, sair",
     cancelButtonText: "Cancelar",
+    confirmButtonColor: "var(--colorAlert)",
   }).then((result) => {
     if (result.isConfirmed) {
       window.location.href = "logout.php";

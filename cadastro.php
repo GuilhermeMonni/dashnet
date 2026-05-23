@@ -82,7 +82,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         icon: 'success',
         title: 'Cadastro realizado!',
         text: 'Sua conta foi criada com sucesso.',
-        confirmButtonText: 'Login'
+        confirmButtonText: 'Login',
+        confirmButtonColor: 'var(--colorAzul)'
     }).then(() => {
         window.location.href = 'index.php';
     });
@@ -95,7 +96,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         icon: 'error',
         title: 'Oops...',
         text: <?php echo json_encode($erro); ?>,
-        confirmButtonText: 'Voltar'
+        confirmButtonText: 'Voltar',
+        confirmButtonColor: 'var(--colorAlert)'
     });
     </script>
     <?php endif; ?>

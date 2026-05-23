@@ -63,12 +63,10 @@
   font-family: var(--fontRoboto) !important;
   font-weight: 500 !important;
   font-size: 0.9em !important;
-  background-color: var(--colorAlert) !important;
   color: var(--colorWhite) !important;
   border: none !important;
   border-radius: 10px !important;
   padding: 0.6rem 2rem !important;
-  box-shadow: 1px 1px 4px var(--colorAlert) !important;
   transition: all 0.3s ease !important;
   min-width: 8.75rem !important;
   height: 1.87rem !important;
