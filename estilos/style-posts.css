@@ -115,6 +115,7 @@
 
 .comment-box {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 10px;
     width: 100%;
