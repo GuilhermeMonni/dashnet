@@ -102,7 +102,7 @@ async function carregarPosts(page) {
         post.commentsCount = getComments.commentsCount;
         post.likes = getLikes.likes_count;
         post.liked = getLikes.liked;
-        console.log(post)
+        console.log(post);
 
         return post;
       }),
@@ -113,47 +113,69 @@ async function carregarPosts(page) {
       .map(
         (post) => `
             <article class="post-card">
-                <div class="post-header">
-                    <div class="post-avatar">${avatar(post.nome)}</div>
-                    <div>
-                        <strong class="post-author">${escapar(post.nome)}</strong>
-                        <span class="post-date">${formatarData(post.created_at)}</span>
-                    </div>
-                </div>
-
-                <p class="post-content">${escapar(post.content)}</p>
-
-                  <div class="comment-box">
-                      <label for="commentInput-${post.idContent}" class="sr-only">Escreva um comentário</label>
-
-                      <textarea
-                          name="commentInput-${post.idContent}"
-                          id="commentInput-${post.idContent}"
-                          class="comment-textarea"
-                          placeholder="Escreva um comentário..."
-                          maxlength="500"
-                          rows="2"
-                      ></textarea>
-
-                      <div class="btn-actions">
-                        <button class="comment-submit-btn" type="button" onclick="sendComment(${post.idContent}, this)">
-                            Enviar
-                        </button>
-
-                        <button class="post-action-btn" type="button" aria-label="Curtir post" onclick="like(${post.idContent}, this)">
-                            <span class="like-count">${Number(post.likes) || 0}</span>
-                            <i class="bi ${post.liked == 1 ? "bi-heart-fill" : "bi-heart"}"
-                              style="${post.liked == 1 ? "color: var(--colorAlert);" : "color: var(--colorBlack);"}"></i>
-                        </button>
-
-                        <button class="post-action-btn" type="button" aria-label="Abrir comentários" onclick="document.getElementById('commentInput-${post.idContent}').focus()">
-                            <span class="comment-count">${Number(post.commentsCount) || 0}</span>
-                            <i class="bi bi-chat-left-text"></i>
-                        </button>
-                      </div>
+              <div class="post-header">
+                  <div class="post-avatar">${avatar(post.nome)}</div>
+                  <div>
+                      <strong class="post-author">${escapar(post.nome)}</strong>
+                      <span class="post-date">${formatarData(post.created_at)}</span>
                   </div>
               </div>
-            </article>
+
+              <p class="post-content">${escapar(post.content)}</p>
+
+              <div class="comment-box">
+                  <label for="commentInput-${post.idContent}" class="sr-only">Escreva um comentário</label>
+
+                  <textarea
+                      name="commentInput-${post.idContent}"
+                      id="commentInput-${post.idContent}"
+                      class="comment-textarea"
+                      placeholder="Escreva um comentário..."
+                      maxlength="500"
+                      rows="2"
+                  ></textarea>
+
+                  <div class="btn-actions">
+                      <button class="comment-submit-btn" type="button" onclick="sendComment(${post.idContent}, this)">
+                          Enviar
+                      </button>
+
+                      <button class="post-action-btn" type="button" aria-label="Curtir post" onclick="like(${post.idContent}, this)">
+                          <span class="like-count">${Number(post.likes) || 0}</span>
+                          <i class="bi ${post.liked == 1 ? "bi-heart-fill" : "bi-heart"}"
+                            style="${post.liked == 1 ? "color: var(--colorAlert);" : "color: var(--colorBlack);"}"></i>
+                      </button>
+
+                      <button class="post-action-btn" type="button" onclick="document.getElementById('commentInput-${post.idContent}').focus()">
+                          <span class="comment-count">${Number(post.commentsCount) || 0}</span>
+                          <i class="bi bi-chat-left-text"></i>
+                      </button>
+                  </div>
+              </div>
+              <div class="post-comments" id="postComments-${post.idContent}">
+                <div class="post-comments-header" style="${post.comments && post.commentsCount ? '' : 'display: none;'}">
+                    <strong>Comentários</strong>
+                </div>
+
+                <div class="post-comments-list">
+                    ${post.comments && post.commentsCount
+                        ? post.comments.map(comment => `
+                            <div class="post-comment-item">
+                                <div class="post-comment-avatar">${avatar(comment.userName)}</div>
+                                <div class="post-comment-body">
+                                    <div class="post-comment-data">
+                                        <strong class="post-comment-author">${escapar(comment.userName)}</strong>
+                                        <span class="post-comment-date">${formatarData(comment.date)}</span>
+                                    </div>
+                                    <p class="post-comment-content">${escapar(comment.content)}</p>
+                                </div>
+                            </div>
+                        `).join('')
+                        : ''
+                    }
+                </div>
+            </div>
+          </article>
         `,
       )
       .join("");
@@ -256,38 +278,42 @@ async function getCommentsCount(postId) {
     if (!data.success || !data.comments_content) {
       return {
         commentsCount: 0,
-        comments: []
+        comments: [],
       };
     }
 
     const commentsWithUsername = await Promise.all(
       data.comments_content.map(async (comment) => {
         try {
-          const commentUsername = await fetch(`getUsername.php?userId=${comment.user_id}`);
+          const commentUsername = await fetch(
+            `getUsername.php?userId=${comment.user_id}`,
+          );
           const dataUserName = await commentUsername.json();
 
           return {
             id: comment.id,
-            userName: dataUserName.user_name ? dataUserName.user_name : "Usuário indisponível.",
+            userName: dataUserName.user_name
+              ? dataUserName.user_name
+              : "Usuário indisponível.",
             userId: comment.user_id,
             content: comment.content,
             date: comment.created_at,
           };
         } catch (error) {
-          console.error('Erro ao buscar comentários!', error)
+          console.error("Erro ao buscar comentários!", error);
         }
-      })
+      }),
     );
 
     return {
       commentsCount: data.comments_content.length,
-      comments: commentsWithUsername
+      comments: commentsWithUsername,
     };
   } catch (erro) {
     console.error("Erro ao buscar comentários:", erro);
     return {
       commentsCount: 0,
-      comments: []
+      comments: [],
     };
   }
 }
