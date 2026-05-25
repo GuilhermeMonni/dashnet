@@ -251,6 +251,32 @@ async function getCommentsCount(postId) {
     const res = await fetch(`commentPost.php?post_id=${postId}`);
     const data = await res.json();
 
+    const comments = data.comments_content;
+
+    comments.forEach(async (comments) => {
+      try {
+        const userId = comments.user_id
+
+        const commentUsername = await fetch(
+          `getUsername.php?userId=${userId}`,
+        );
+
+        const dataUserName = await commentUsername.json();
+        const dataComments = {
+        id: comments.id,
+        userName: dataUserName.user_name ? dataUserName.user_name : 'Usuário indisponivel.',
+        userId: comments.user_id,
+        content: comments.content,
+        date: comments.created_at,
+      };
+
+      console.log(dataComments);
+      } catch (error) {
+        console.log("Erro so buscar o nome do usuário.");
+        return;
+      }
+    });
+
     if (data.success) {
       return data;
     }
