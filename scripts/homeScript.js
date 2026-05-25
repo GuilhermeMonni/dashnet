@@ -98,10 +98,12 @@ async function carregarPosts(page) {
         //view likes and comments post
         const getLikes = await getLikesCount(post.idContent);
         const getComments = await getCommentsCount(post.idContent);
-        post.comments = getComments.comments_content;
-        post.commentsCount = getComments.comments_count;
+        post.comments = getComments.comments;
+        post.commentsCount = getComments.commentsCount;
         post.likes = getLikes.likes_count;
         post.liked = getLikes.liked;
+        console.log(post)
+
         return post;
       }),
     );
@@ -251,40 +253,42 @@ async function getCommentsCount(postId) {
     const res = await fetch(`commentPost.php?post_id=${postId}`);
     const data = await res.json();
 
-    const comments = data.comments_content;
-
-    comments.forEach(async (comments) => {
-      try {
-        const userId = comments.user_id
-
-        const commentUsername = await fetch(
-          `getUsername.php?userId=${userId}`,
-        );
-
-        const dataUserName = await commentUsername.json();
-        const dataComments = {
-        id: comments.id,
-        userName: dataUserName.user_name ? dataUserName.user_name : 'Usuário indisponivel.',
-        userId: comments.user_id,
-        content: comments.content,
-        date: comments.created_at,
+    if (!data.success || !data.comments_content) {
+      return {
+        commentsCount: 0,
+        comments: []
       };
-
-      console.log(dataComments);
-      } catch (error) {
-        console.log("Erro so buscar o nome do usuário.");
-        return;
-      }
-    });
-
-    if (data.success) {
-      return data;
     }
 
-    return 0;
+    const commentsWithUsername = await Promise.all(
+      data.comments_content.map(async (comment) => {
+        try {
+          const commentUsername = await fetch(`getUsername.php?userId=${comment.user_id}`);
+          const dataUserName = await commentUsername.json();
+
+          return {
+            id: comment.id,
+            userName: dataUserName.user_name ? dataUserName.user_name : "Usuário indisponível.",
+            userId: comment.user_id,
+            content: comment.content,
+            date: comment.created_at,
+          };
+        } catch (error) {
+          console.error('Erro ao buscar comentários!', error)
+        }
+      })
+    );
+
+    return {
+      commentsCount: data.comments_content.length,
+      comments: commentsWithUsername
+    };
   } catch (erro) {
     console.error("Erro ao buscar comentários:", erro);
-    return 0;
+    return {
+      commentsCount: 0,
+      comments: []
+    };
   }
 }
 

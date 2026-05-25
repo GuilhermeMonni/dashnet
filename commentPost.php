@@ -28,21 +28,9 @@ try {
 
         $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        //count comments
-        $count = $pdo->prepare("
-                SELECT COUNT(*) 
-                FROM comments
-                WHERE post_id = :post_id
-            ");
-        $count->bindValue(':post_id', $postId, PDO::PARAM_INT);
-        $count->execute();
-
-        $commentsCount = (int)$count->fetchColumn();
-
         echo json_encode([
             'success' => true,
-            'comments_content' => $comments,
-            'comments_count' => $commentsCount
+            'comments_content' => $comments
         ]);
         exit;
     }
