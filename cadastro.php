@@ -68,13 +68,20 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <link rel="stylesheet" href="estilos/style-responsive.css">
     <link rel="shortcut icon" href="favicon_io/favicon.ico" type="image/x-icon">
     <script src="scripts/eyesScript.js"></script>
-    <script src="scripts/homeScript.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <title>DashNet • cadastro</title>
 </head>
 
 <body>
+    <script>
+        function bioCounter() {
+          //count caracter bio
+          const bio = document.getElementById("bio");
+          const counter = document.getElementById("bio-counter");
+          counter.textContent = `${bio.value.length}/80`;
+        }
+    </script>
 
     <?php if (isset($sucess)): ?>
     <script>

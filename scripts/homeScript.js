@@ -102,7 +102,6 @@ async function carregarPosts(page) {
         post.commentsCount = getComments.commentsCount;
         post.likes = getLikes.likes_count;
         post.liked = getLikes.liked;
-        console.log(post);
 
         return post;
       }),
@@ -153,8 +152,8 @@ async function carregarPosts(page) {
                   </div>
               </div>
               <div class="post-comments" id="postComments-${post.idContent}">
-                <div class="post-comments-header" style="${post.comments && post.commentsCount ? '' : 'display: none;'}">
-                    <strong>Comentários</strong>
+                <div class="post-comments-header" style="${post.comments && post.commentsCount ? 'display:block;' : 'display:none;'}">
+                	<strong>Comentários</strong>
                 </div>
 
                 <div class="post-comments-list">
@@ -374,9 +373,3 @@ function home() {
   window.location.href = "home.php";
 }
 
-function bioCounter() {
-  //count caracter bio
-  const bio = document.getElementById("bio");
-  const counter = document.getElementById("bio-counter");
-  counter.textContent = `${bio.value.length}/80`;
-}
