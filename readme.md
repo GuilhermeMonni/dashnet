@@ -19,6 +19,7 @@ Este é um sistema de login simples desenvolvido em PHP para a cadeira de Backen
 * conexao.php: Arquivo de configuração com as credenciais do banco.
 * getPosts.php: Arquivo para buscar os posts no banco de dados.
 * getPostsProfile.php: Arquivo para buscar os posts pessoais do usuário.
+* getUsername.php: Arquivo para buscar o nome do usuário.
 * home.php: Página de início.
 * index.php: Página de login.
 * likePost.php: Arquivo para criar like nos posts.
