@@ -1,5 +1,4 @@
 # Sistema-login
-🚧Em desenvolvimento🚧
 
 Este é um sistema de login simples desenvolvido em PHP para a cadeira de Backend da faculdade, com as funcionalidades de registro e login de usuário. Expandi para uma "mini rede social" com a possibilidade de criar e curtir posts. Algumas outras funções estão sendo desenvolvidas, como: Editar perfil e posts, deixar likes e comentários, entre outros.
 
