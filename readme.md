@@ -8,9 +8,7 @@ Este é um sistema de login simples desenvolvido em PHP para a cadeira de Backen
 * Logout de usuário
 * Criar posts no feed.
 * Like nos posts.
-* Comentários nos posts (em desenvolvimento).
-* Editar os posts criados (em desenvolvimento).
-* Edição de perfil (em desenvolvimento).
+* Comentários nos posts.
 
 # Estrutura do Projeto
 * cadastro.php: Página para cadastrar usuário.
